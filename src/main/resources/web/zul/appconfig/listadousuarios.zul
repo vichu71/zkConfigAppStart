@@ -1,0 +1,106 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<div sclass="row"
+		viewModel="@id('usuarioVm') @init('cestel.sercom.web.vm.UsuarioVm')">
+		<div sclass="col">
+			<groupbox closable="false">
+				<caption>
+					<label value="${labels.title.usuarios}" />
+				</caption>
+				<div sclass="row">
+					<div sclass="col">
+						<hlayout>
+							<textbox value="@bind(usuarioVm.filter)"
+								onOK="@global-command('loadUsuarios')"
+								placeholder="${labels.ph.searchUsuarios}" hflex="3" />
+							<button iconSclass="z-icon-search"
+								onClick="@global-command('loadUsuarios')" hflex="0.5"/>
+								<label value="" hflex="10" />
+								<label value="Domain:" hflex="0.5" />
+							<label value="${sessionScope.connectedUser.domid.name}" hflex="1" style="color:blue"/>
+						</hlayout>
+						
+					</div>
+				</div>
+				<div sclass="row mt-3">
+					<div sclass="col">
+						<grid mold="paging" pageSize="10"
+							emptyMessage="${labels.message.noUsuarios}"
+							model="@load(usuarioVm.usuarios) @template('non-editable')"
+							oddRowSclass="z-grid-odd">
+							<columns>
+								<column hflex="1" sort="auto(name)">
+									${labels.column.name}
+								</column>
+								<column hflex="1"
+									sort="auto(username)">
+									${labels.column.login}
+								</column>
+								<column hflex="1"
+									sort="auto(profilecode.descripcion)">
+									${labels.column.profile}
+								</column>
+								<column hflex="1"
+									sort="auto(domid.name)">
+									${labels.column.domain}
+								</column>
+								<column hflex="1"
+									sort="auto(subdomid.name)">
+									${labels.column.subdominio}
+								</column>
+								<column hflex="1" sort="auto(info)">
+									${labels.column.desc}
+								</column>
+								<column hflex="1"
+									sort="auto(resource.name)">
+									${labels.column.team}
+								</column>
+
+
+
+							<column hflex="1" align="right"></column>
+							</columns>
+
+							<template name="non-editable">
+								<row>
+									<label value="@load(each.name)" />
+									<label value="@load(each.username)" />
+									<label
+										value="@load(each.profilecode.descripcion)" />
+									<label
+										value="@load(each.domid.name)" />
+									<label
+										value="@load(each.subdomid.name)" />
+									<label value="@load(each.info)" />
+									<label
+										value="@load(each.resource.name)" />
+
+									<div>
+										<button sclass="btn-success"
+											iconSclass="z-icon-pencil"
+											onClick="@command('showEdit', usuario=each)" />
+										<button sclass="btn-danger"
+											iconSclass="z-icon-trash"
+											onClick="@command('removeUsuario', usuario=each)" />
+									</div>
+								</row>
+							</template>
+						</grid>
+					</div>
+				</div>
+				<div sclass="row mt-3">
+					<div sclass="col">
+						<!-- <button sclass="btn-success"
+							label="${labels.action.save}" onClick="@command('saveUsuarios')" />
+							<button sclass="btn-danger"
+							label="${labels.action.cancel}"
+							onClick="@command('loadUsuarios')" /> -->
+						<button label="${labels.action.add}"
+							onClick="@command('showEdit')" />
+					</div>
+				</div>
+			</groupbox>
+		</div>
+	</div>
+</zk>

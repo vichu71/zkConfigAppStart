@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<?meta http-equiv="Pragma" content="no-cache" ?>
+<?meta http-equiv="Expires" content="-1" ?>
+<?meta name="copyright" content="${labels.global.copy}" ?>
+<?meta name="author" content="Victor Manuel Huecas Sánchez de Molina" ?>
+<?meta name="app" content="${labels.global.title}" ?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+<?page id="index" title="${labels.global.title}" contentType="text/html;charset=UTF-8"?>
+<?link rel="stylesheet" type="text/css" href="/css/fontawesome.min.css"?>
+<?link rel="stylesheet" type="text/css" href="/css/solid.min.css"?>
+<?link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"?>
+<?link rel="stylesheet" type="text/css" href="/css/font-awesome-animation.min.css"?>
+<?link rel="stylesheet" type="text/css" href="/css/converse.css"?>
+<zk xmlns:h="native" xmlns:w="http://www.zkoss.org/2005/zk/client">
+	<script type="text/javascript" src="js/sdptransform.js" />
+	<script type="text/javascript" src="js/webrtc.js" />
+	<script type="text/javascript" src="js/atlas.js" />
+	<script type="text/javascript" src="js/converse.js" />
+	<script type="text/javascript" src="js/easytimer.min.js" />
+
+	<!-- <window id="wIndex" border="none"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.LayoutPrincipalVM')"
+		height="100%" width="100%"> -->
+	<div sclass="container-fluid" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('headerVm') @init('cestel.sercom.web.vm.MenuVm')">
+
+		<include src="~./zul/headermenu.zul" />
+	</div>
+	<borderlayout hflex="true" vflex="true"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.LayoutPrincipalVM')">
+
+
+
+		<west splittable="true" width="230px" vflex="false">
+			<navbar id="navbar" orient="vertical" collapsed="false"
+				onSelect="@command('navigatePage', target=self.selectedItem.attributes['navigationPage'])"
+				height="800">
+
+				<nav label="Resources" iconSclass="z-icon-bar-chart-o"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+				<nav label="Usuarios" iconSclass="z-icon-user"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+				<nav label="Directory" iconSclass="z-icon-folder-open"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+				<nav label="Devices" iconSclass="z-icon-gear"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+				<nav label="Plugins" iconSclass="z-icon-puzzle-piece"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+				<nav label="Tools" iconSclass="z-icon-magic"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+				
+				<nav label="Help" iconSclass="z-icon-question-circle"
+					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
+
+
+
+
+				<template name="navitem" var="navigationPage">
+					<navitem label="@load(navigationPage.subTitle)"
+						selected="@load(navigationPage.selected)" />
+				</template>
+			</navbar>
+		</west>
+
+		<center vflex="true">
+		<div id="container" sclass="row"
+         viewModel="@id('vmt') @init('cestel.sercom.web.vm.ResourceVm')">
+			<apply id="contentInclude" mode="instant" sclass="content"
+				currentPage="@ref(vm.currentPage)"
+				templateURI="@load(currentPage.includeUri)"/>
+				<textbox id ="data" visible="false" value="@load(vm.currentPage.data)"/> 
+				
+
+</div>
+		</center>
+		<south>
+			<a href="layoutprincipal">
+				<image src="./img/menu_configuracion.jpg" width="80%" />
+			</a>
+		</south>
+	</borderlayout>
+	<!--</window>-->
+</zk>

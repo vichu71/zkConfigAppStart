@@ -1,0 +1,261 @@
+:root {
+	--azul-blink: #88CEFF;
+	--color-fondo: #f5f8ff;
+}
+
+/** cambio de color de fonndo .. */
+body {
+	background-color: var(--color-fondo) !important;
+}
+
+.z-window,
+.z-window-content,
+.z-north, .z-south, .z-west, .z-center, .z-east,
+.z-groupbox-content,
+.z-groupbox > .z-groupbox-header,
+.z-grid .z-row-inner, .z-grid .z-cell,
+.z-north-collapsed, .z-south-collapsed, .z-west-collapsed, .z-center-collapsed, .z-east-collapsed,
+.z-menu-content, .z-menuitem-content,
+.z-menubar {
+	background: var(--color-fondo);
+	background-color: var(--color-fondo);
+}
+
+.z-row:hover > .z-row-inner,
+.z-row:hover > .z-cell,
+.no-highlight .z-row:hover > .z-row-inner,
+.no-highlight .z-row:hover > .z-cell {
+	background: var(--color-fondo) !important;
+}
+
+
+.z-east-splitter, .z-west-splitter, .z-north-splitter, .z-south-splitter {
+	background-color: #dee8ff;
+}
+
+.z-groupbox > .z-groupbox-header .z-caption, .z-groupbox > .z-groupbox-header .z-groupbox-title {
+	background: var(--color-fondo) !important;
+}
+
+.z-grid {
+	background: var(--color-fondo) !important;
+}
+
+/** .. cambio de color de fondo */
+
+.video-container {
+  position: relative;
+  overflow: hidden;
+  height: 0;
+  /* padding-bottom: 56.25%; */
+}
+
+.video-container .video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  resize: both;
+}
+
+.video-container .video-local {
+  position: absolute;
+  overflow: visible;
+  bottom: 0;
+  right: 0;
+  height: 20%;
+}
+
+.noborder {
+	border:0px;
+}
+.icon-pulse {
+  display: inline-block;
+  -moz-animation: pulse 2s infinite linear;
+  -o-animation: pulse 2s infinite linear;
+  -webkit-animation: pulse 2s infinite linear;
+  animation: pulse 2s infinite linear;
+}
+
+.verde {
+	color:  #138d75;
+}
+
+.azul {
+	color:  #2e86c1;
+}
+
+.azul2 {
+	color:   #1b4f72;
+}
+
+.rojo {
+	color:  #a93226;
+}
+
+.rojo-intenso {
+	color:	#A00808;
+}
+
+.disabled {
+	color:  #a7a7a7;
+}
+
+.negrita {
+	font-weight: bold;
+}
+
+.fondo-azul .z-grid, .fondo-azul .z-row-inner, .fondo-azul .z-grid,.fondo-azul .z-cell {
+	background: var(--azul-blink) !important; 
+}
+
+/* c-beat */
+.c-beat {
+  animation:fa-beat 5s ease infinite;
+}
+
+@keyframes fa-beat {
+  0% {
+    transform:scale(1);
+  }
+  5% {
+    transform:scale(1.45);
+  }
+  20% {
+    transform:scale(1);
+  }
+  30% {
+    transform:scale(1);
+  }
+  35% {
+    transform:scale(1.45);
+  }
+  50% {
+    transform:scale(1);
+  }
+  55% {
+    transform:scale(1.45);
+  }
+  70% {
+    transform:scale(1);
+  }
+}
+
+/* c-blink */
+@-moz-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Firefox */
+@-webkit-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Webkit */
+@-ms-keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* IE */
+@keyframes blink {0%{opacity:1;} 50%{opacity:0.5;} 100%{opacity:1;}} /* Opera */
+
+
+.c-blink {
+    background-color: var(--azul-blink) !important;
+    color: #000000 !important;
+    /* padding: 15px 15px 15px 15px; */
+    text-align:center;
+    margin-bottom: 4px;
+    border-radius: 5px;
+    -moz-transition:all 0.5s ease-in-out;
+    -webkit-transition:all 0.5s ease-in-out;
+    -o-transition:all 0.5s ease-in-out;
+    -ms-transition:all 0.5s ease-in-out;
+    transition:all 0.5s ease-in-out; 
+    -moz-animation:blink normal 1.5s infinite ease-in-out; /* Firefox */
+    -webkit-animation:blink normal 1.5s infinite ease-in-out; /* Webkit */
+    -ms-animation:blink normal 1.5s infinite ease-in-out; /* IE */
+    animation:blink normal 1.5s infinite ease-in-out; /* Opera */
+}
+
+/* Usar para no iluminar los grid en el hover */
+.no-highlight .z-row:hover > .z-row-inner,
+.no-highlight .z-row:hover > .z-cell {
+	background: none;
+}
+
+
+/** LOADER **/
+#loader {
+ position: absolute;
+    left: 50%;
+    top: 46%;
+    z-index: 1;
+    width: 150px;
+    height: 150px;
+    margin: -75px 0 0 -75px;
+    border: 6px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 6px solid #3498db;
+    width: 50PX;
+    height: 50PX;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 } 
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom { 
+  from{ bottom:-100px; opacity:0 } 
+  to{ bottom:0; opacity:1 }
+}
+
+#loaderText {
+  display: none;
+  text-align: center;
+}
+
+/** FIN LOADER **/
+
+
+/** INICIO ANIMACIÓN PARPADEO EN LLAMADA ENTRANTE */ 
+@-webkit-keyframes blink {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+}
+@-moz-keyframes blink {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+}
+@keyframes blink {
+    0%   { background-color: #fff; }
+    49% { background-color: #fff; }
+    50% { background-color: #000; }
+    99% { background-color: #000; }
+    100% { background-color: #fff; }
+}
+
+.parpadeo {
+	-webkit-animation: blink 1s infinite;
+	-moz-animation:    blink 1s infinite;
+	animation:         blink 1s infinite;
+}
+
+
+/** FIN ANIMACIÓN PARPADEO EN LLAMADA ENTRANTE */

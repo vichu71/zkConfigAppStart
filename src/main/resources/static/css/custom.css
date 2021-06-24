@@ -1,0 +1,81 @@
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    color: #008ccc;
+}
+
+.badge {
+    padding: .5em .8em;
+}
+
+.z-caption-content, .z-caption .z-label {
+    font-size: 1.15em;
+    color: #008ccc;
+}
+
+.z-messagebox {
+    word-break: normal;
+}
+
+/*.z-window {
+    width: 500px !important;
+}*/
+
+.z-window-header, .z-window-icon {
+    color: white;
+}
+
+.z-combobox-input[readonly] {
+    color: inherit;
+    background: inherit;
+}
+
+.u-toolbar .u-flag img {
+    height: 13px;
+    width: 20px;
+}
+
+.u-toolbar {
+    border-bottom: 1px solid #d9d9d9;
+    border-top: 1px solid #d9d9d9;
+}
+
+.u-toolbar .z-toolbarbutton-content {
+    padding: 0;
+}
+
+.u-toolbar .z-toolbarbutton, .u-toolbar .z-toolbarbutton-content > * {
+    margin: 0;
+}
+
+.label-required:after {
+    display: inline;
+    color: #e32;
+    content: '*';
+}
+
+.label-required-before:before {
+    display: inline;
+    color: #e32;
+    content: '* ';
+}
+
+.label-required-before {
+    font-style: italic;
+}
+
+.login{
+	
+	position:absolute;
+	left:50%;
+	top:40%;
+	margin-left:-165px;
+	margin-top:-150px;
+	width:330px
+}
+.center {
+  margin: 0 auto;
+  width: 100%;
+   overflow: auto;
+    height: 780px;
+
+  
+}

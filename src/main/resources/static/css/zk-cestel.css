@@ -1,0 +1,86 @@
+/* reducción Toolbarbutton dentro de un listcell */
+.z-listcell-content .z-toolbarbutton-content {
+	padding: 0px 2px 2px 4px;
+}
+/* reducción margenes grid */
+.z-row-content {
+	padding: 6px 2px 6px 2px;
+}
+
+/* reducción margenes toolbarbutton */
+.z-toolbarbutton {
+    padding: 3px 3px 3px 3px;
+}
+
+/* reducción Toolbarbutton dentro de un grid */
+.z-row-content .z-toolbarbutton-content {
+	padding: 2px 2px 2px 2px;
+}
+
+/** reducción altura botón */
+.z-button {
+	padding: 6px 16px;
+}
+
+/* Corrección iconos menu */
+.z-menu-content i:not(.z-menu-icon), .z-menuitem-content i:not(.z-menu-icon) {
+    display: inline-block;
+    width: 16px;
+    height: 20px;
+    line-height: 16px;
+    text-align: center;
+    margin-right: 9px;
+}
+
+/* reducción margenes ventana */
+.z-window, .z-window-content {
+	padding: 6px;
+}
+
+/* reducción altura título ventana */
+.z-window-header {
+	padding-bottom: 0px;
+}
+
+/* reducción altura menu */
+.z-menubar {
+	padding: 0px;
+}
+
+/* reducción altura tabpanel */
+.z-tabpanel {
+	padding: 0px;
+}
+
+/* corrección caption para separar el icono del título */
+.z-caption-content {
+	padding: 4px 4px;
+}
+
+/* correccion para que salga la linea entre las filas de la tabla*/
+.z-row .z-row-inner,
+.z-row .z-cell {
+ border-top:1px solid #F2F2F2;
+ overflow:hidden;
+ position:unset;
+ z-index:0
+}
+.z-listitem .z-listcell {
+ border-top:1px solid #F2F2F2;
+ overflow:hidden;
+ cursor:pointer;
+ position:revert;
+ z-index:0
+}
+
+.z-listcell-up {
+ /*border-top:1px solid #F2F2F2;*/
+ overflow:hidden;
+ cursor:pointer;
+ position:revert;
+ /*z-index:0*/
+ padding: 4px 4px;
+}
+
+
+

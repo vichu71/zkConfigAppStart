@@ -1,0 +1,78 @@
+<zk>
+	<config-name>ZK config</config-name>
+
+	<session-config>
+		<device-type>ajax</device-type>
+		<timeout-message>label:timeout</timeout-message>
+	</session-config>
+
+	<system-config>
+		<cache-provider-class>org.zkoss.zk.ui.impl.GlobalDesktopCacheProvider
+		</cache-provider-class>
+	</system-config>
+
+
+	<client-config>
+		<processing-prompt-delay>1000</processing-prompt-delay>
+		<debug-js>false</debug-js>
+	</client-config>
+
+	<library-property>
+		<name>org.zkoss.util.label.web.charset</name>
+		<value>UTF-8</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zul.progressbox.position</name>
+		<value>center</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zk.ui.composer.autowire.xel</name>
+		<value>true</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.util.label.web.charset</name>
+		<value>UTF-8</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zul.theme.fontSizeM</name>
+		<value>11px</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zul.theme.fontSizeS</name>
+		<value>10px</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.zul.theme.fontSizeXS</name>
+		<value>9px</value>
+	</library-property>
+
+	<library-property>
+		<name>org.zkoss.theme.preferred</name>
+		<value>iceblue</value>
+	</library-property>
+
+	<desktop-config>
+		<theme-uri>/css/bootstrap.min.css</theme-uri>
+		<theme-uri>/css/custom.css</theme-uri>
+		<theme-uri>/css/fontanewesome.min.css</theme-uri>
+		<theme-uri>/css/solid.min.css</theme-uri>
+		<theme-uri>/css/stylesmenu.css</theme-uri>
+		<theme-uri>/css/style.css</theme-uri>
+		<theme-uri>/css/zk-cestel.css</theme-uri>
+		<theme-uri>/css/wa.css</theme-uri>
+	</desktop-config>
+
+	<!-- <error-page> <error-code>500</error-code> <location>/error</location> 
+		</error-page> -->
+	<listener>
+		<listener-class>org.zkoss.zkmax.au.websocket.WebSocketWebAppInit
+		</listener-class>
+	</listener>
+
+</zk>
