@@ -37,36 +37,5 @@ public class UserController {
   public String botonesiconos( HttpSession session, Model model) {
     return "botonesiconos";
   }
-  
- 
-  @GetMapping("/pruebasComponent")
-  public String pruebasComponent( HttpSession session, Model model) {
-    return "pruebasComponent";
-  }
-  
-  @GetMapping("/otraPrueba")
-  public String otraPrueba( HttpSession session, Model model) {
-    return "otraPrueba";
-  }
-  
-  
-
-  
-
- 
-  
-  
-//  @GetMapping("/admin")
-//  public String admin() {
-//    return "admin";
-//  }
-//  @GetMapping("/user-bar")
-//  public String userbar() {
-//    return "user-bar";
-//  }
-//@GetMapping("/secure/{page}")
-//public String secure(@PathVariable String page) {
-//    return "secure/" + page;
-//}
     
 }

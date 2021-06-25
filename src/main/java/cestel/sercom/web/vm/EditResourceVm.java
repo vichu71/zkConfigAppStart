@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -197,13 +198,18 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			resourceVmBean.setType(prop.getType());
 
 			if ("STRING_LIST".equals(prop.getType())) {
-				String cadena = "";
+				Optional<String> cadenaopt =Optional.empty();
+				String cadena="";
 
 				if (!modificacion) {
 					cadena = prop.getDefval();
 				} else {
-					cadena = listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(prop.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow();
+					cadenaopt = listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(prop.getName()))
+							.map(PropResource::getValue).findAny();
+					if(cadenaopt.isPresent()) {
+						
+						cadena=cadenaopt.get();
+					}
 				}
 				String[] parts = cadena.split(";");
 
@@ -297,12 +303,16 @@ public class EditResourceVm extends SelectorComposer<Component> {
 		} else
 
 		{
-			if ("0".equals(
-					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow()))
-				radiogroup.setSelectedItem(radiotrue);
-			else
-				radiogroup.setSelectedItem(radiofalse);
+			Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+					.filter(fil -> fil.getName().equals(resourceVmBean.getName())).map(PropResource::getValue)
+					.findAny();
+
+			if (propiedad.isPresent()) {
+				if ("0".equals(propiedad.get()))
+					radiogroup.setSelectedItem(radiotrue);
+				else
+					radiogroup.setSelectedItem(radiofalse);
+			}
 
 		}
 
@@ -370,12 +380,17 @@ public class EditResourceVm extends SelectorComposer<Component> {
 				// "+combobox.getSelectedIndex());
 
 			} else {
-				if (entry.getKey()
-						.equals(listaPropiedadesPorIdResource.stream()
-								.filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-								.map(PropResource::getValue).findAny().orElseThrow()))
 
-					combobox.setSelectedItem(item);
+				Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+						.filter(fil -> fil.getName().equals(resourceVmBean.getName())).map(PropResource::getValue)
+						.findAny();
+
+				if (propiedad.isPresent()) {
+					if (entry.getKey().equals(propiedad.get())) {
+
+						combobox.setSelectedItem(item);
+					}
+				}
 			}
 		}
 
@@ -393,9 +408,12 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			textbox1.setValue("");
 		} else {
 
-			textbox1.setValue(
-					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow());
+			Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+					.filter(fil -> fil.getName().equals(resourceVmBean.getName())).map(PropResource::getValue)
+					.findAny();
+
+			if (propiedad.isPresent())
+				textbox1.setValue(propiedad.get());
 		}
 
 		createComponent();
@@ -434,6 +452,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			if (!listSkill.get(ite).equals(""))
 				addListItem(prop, listbox, ite, null);
 		}
+		addListItem(prop, listbox, -1, null);
 
 		columna3.setWidth("200px");
 		columnas1.appendChild(columna3);
@@ -461,29 +480,41 @@ public class EditResourceVm extends SelectorComposer<Component> {
 		listitem = new Listitem();
 		Listcell listcellicon = new Listcell();
 		Listcell listcelltext = new Listcell();
-		// si es añadida del listado o por el usuario. si skill es !null el usuario
-		// añade
-		if (skill == null) {
-
-			listcelltext.setLabel(listSkill.get(ite));
-
+		// tenemos que meter un iten vacio para que nos pueda crear el componente
+		// dinamicamente,
+		if (ite == -1) {
 			listitem.appendChild(listcelltext);
+			listitem.appendChild(listcellicon);
+			listitem.setDroppable("true");
 			listcelltext.setAttribute("nombreatt", resourceVmBean.getName());
+			listbox.appendChild(listitem);
 
 		} else {
+			// si es añadida del listado o por el usuario. si skill es !null el usuario
+			// añade
+			if (skill == null) {
 
-			listcelltext.setLabel(skill);
-			listitem.appendChild(listcelltext);
-			listcelltext.setAttribute("nombreatt", prop);
+				listcelltext.setLabel(listSkill.get(ite));
+
+				listitem.appendChild(listcelltext);
+				listcelltext.setAttribute("nombreatt", resourceVmBean.getName());
+
+			} else {
+
+				listcelltext.setLabel(skill);
+				listitem.appendChild(listcelltext);
+				listcelltext.setAttribute("nombreatt", prop);
+			}
+			listcellicon.addEventListener(Events.ON_CLICK, (Event event) -> deleteItem(listbox, event));
+
+			listcellicon.setIconSclass("fa fa-trash azul");
+			listitem.appendChild(listcellicon);
+			listitem.setDraggable("true");
+			listitem.setDroppable("true");
+			listitem.addEventListener(Events.ON_DROP,
+					(DropEvent event) -> moveToTop(listbox, event, event.getDragged()));
+			listbox.appendChild(listitem);
 		}
-		listcellicon.addEventListener(Events.ON_CLICK, (Event event) -> deleteItem(listbox, event));
-
-		listcellicon.setIconSclass("fa fa-trash azul");
-		listitem.appendChild(listcellicon);
-		listitem.setDraggable("true");
-		listitem.setDroppable("true");
-		listitem.addEventListener(Events.ON_DROP, (DropEvent event) -> moveToTop(listbox, event, event.getDragged()));
-		listbox.appendChild(listitem);
 	}
 
 	private void addItem(String prop, Listbox listbox, Event event, String skill) {
@@ -541,9 +572,9 @@ public class EditResourceVm extends SelectorComposer<Component> {
 					// listaDeListCell.add(listcell.getLabel());
 					atributosCelList = atributosCelList + listcell.getLabel() + ";";
 					// System.out.println(atributosCelList);
-					// if (!atributosCelList.equals(""))
-					prop.put((String) hijo.getAttribute("nombreatt"),
-							atributosCelList.substring(0, atributosCelList.length() - 1));
+					if (!atributosCelList.equals(""))
+						prop.put((String) hijo.getAttribute("nombreatt"),
+								atributosCelList.substring(0, atributosCelList.length() - 1));
 				}
 
 			}
@@ -664,8 +695,6 @@ public class EditResourceVm extends SelectorComposer<Component> {
 		// resource.setPropResource(null);
 		resource = resourceMag.saveOrUpdate(resource);
 
-		
-
 		propresourceMag.deleteByResource(resource);
 
 		for (Map.Entry<String, String> entry : prop.entrySet()) {
@@ -684,12 +713,12 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			propresource = propresourceMag.saveOrUpdate(propresource);
 		}
 		// crear configMsg
-	
 
 		if (!modificacion) {
-			conserMag.doConfig(resourceXml.createMsg(resource, modificacion));
+			resourceXml.createMsg(resource, modificacion);
+			// conserMag.doConfig();
 		}
-		resourceXml.updateMsg(resource,prop);
+		resourceXml.updateMsg(resource, prop);
 
 		System.out.println(resource.getId());
 		BindUtils.postGlobalCommand(null, null, "loadResources", null);

@@ -59,13 +59,13 @@ public class LoginVm extends Window {
     public void init() {
 
         // Get all the collaborator beans from the Spring application context.
-    	try {
-			conserMag.isCoreConfigured();
-		} catch (CxException e) {
-			log.error("error de conexion con sercom");
-			e.printStackTrace();
-		}
-      
+//    	try {
+//			conserMag.isCoreConfigured();
+//		} catch (CxException e) {
+//			log.error("error de conexion con sercom");
+//			e.printStackTrace();
+//		}
+//      
         this.validator = SpringUtil.getApplicationContext().getBean(Validator.class);
         this.userlogin = new UserVmBean();
 
