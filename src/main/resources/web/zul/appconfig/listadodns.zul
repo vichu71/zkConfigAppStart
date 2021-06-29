@@ -1,15 +1,15 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
 
-	<div sclass="row"
+	<div
 		viewModel="@id('dnsVm') @init('cestel.sercom.web.vm.DnsVm')">
-		<div sclass="col">
+		<div >
 			<groupbox closable="false">
 				<caption>
 					<label value="${labels.title.dns}" />
 				</caption>
-				<div sclass="row">
-					<div sclass="col">
+				<div >
+					<div >
 						<hlayout>
 							<textbox value="@bind(dnsVm.filter)"
 								onOK="@global-command('loadDns')"
@@ -23,13 +23,16 @@
 						
 					</div>
 				</div>
-				<div sclass="row mt-3">
-					<div sclass="col">
+				<div sclass="mt-3">
+					<div >
 						<grid mold="paging" pageSize="10"
 							emptyMessage="${labels.message.noDns}"
 							model="@load(dnsVm.dns) @template('non-editable')"
-							oddRowSclass="z-grid-odd">
+							zclass="none">
 							<columns>
+								<column hflex="0.2" sort="auto(name)">
+									
+								</column>
 								<column hflex="1" sort="auto(name)">
 									${labels.column.name}
 								</column>
@@ -57,7 +60,10 @@
 							</columns>
 
 							<template name="non-editable">
-								<row>
+								<row context="editPopup">
+								
+										<checkbox checked="@load(status)"/>
+								
 									<label value="@load(each.name)" />
 									<label value="@load(each.mediacode)" />
 									<label
@@ -82,7 +88,7 @@
 					</div>
 				</div>
 				<div sclass="row mt-3">
-					<div sclass="col">
+					<div >
 						<!-- <button sclass="btn-success"
 							label="${labels.action.save}" onClick="@command('saveUsuarios')" />
 							<button sclass="btn-danger"
@@ -95,4 +101,8 @@
 			</groupbox>
 		</div>
 	</div>
+	 <menupopup id="editPopup">
+        <menuitem iconSclass="z-icon-pencil-o" label="Message" />
+        <menuitem iconSclass="z-icon-trash-o" label="Profile" />
+    </menupopup>
 </zk>

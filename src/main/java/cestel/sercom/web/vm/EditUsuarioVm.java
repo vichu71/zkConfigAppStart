@@ -51,9 +51,6 @@ import lombok.extern.slf4j.Slf4j;
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
 public class EditUsuarioVm  extends SelectorComposer<Component> {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 
 	UserVmBean userVmBean;
@@ -61,9 +58,6 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 	@Wire
 	private User usuario;
 	
-	@Wire
-	private Combobox cmbTeam;
-
 	List<Dominio> dominio =new ArrayList<>();
 
 	List<SubDominio> subDominio =new ArrayList<>();
@@ -111,7 +105,7 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 	@AfterCompose
     public void afterCompose(@ContextParam(ContextType.VIEW) Component view){
         Selectors.wireComponents(view, this, false);
-        //cmbTeam.setModel(listTeam);
+      
     }
 
 	@Command
@@ -234,7 +228,6 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 
 		teamname.add(0, "-none-");
 
-		//cmbTeam.setSelectedIndex(teamname.size()-1);
 	}
 
 }

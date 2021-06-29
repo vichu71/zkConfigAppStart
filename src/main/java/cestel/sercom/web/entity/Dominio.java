@@ -4,13 +4,25 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author vmhuecas
  * @since may 2021
  */
-@Data
+//@Data
+@Getter
+@Setter
+@NoArgsConstructor
 @Entity
 @Table(name = "s_domains")
 public class Dominio {
@@ -28,7 +40,9 @@ public class Dominio {
     @Column
     private String      utc;
     
-    @OneToMany(mappedBy = "dominio")
+    @OneToMany(mappedBy = "dominio",fetch=FetchType.EAGER)
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @Fetch(value = FetchMode.SUBSELECT)
 	private List<SubDominio> subdominios;
 
   

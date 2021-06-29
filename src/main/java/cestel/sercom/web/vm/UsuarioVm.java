@@ -94,7 +94,7 @@ public class UsuarioVm {
 						BindUtils.postGlobalCommand(null, null, "loadUsuarios", null);
 
 						// show notification
-						ApplicationUtils.showInfo("message.usuarioEliminado");
+						ApplicationUtils.showInfo("message.registroEliminado");
 						
 						
 					}

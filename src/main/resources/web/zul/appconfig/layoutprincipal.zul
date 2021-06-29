@@ -54,7 +54,7 @@
 
 				<nav label="Tools" iconSclass="z-icon-magic"
 					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
-				
+
 				<nav label="Help" iconSclass="z-icon-question-circle"
 					children="@load(vm.pageMap[self.label].values()) @template('navitem')" />
 
@@ -69,15 +69,16 @@
 		</west>
 
 		<center vflex="true">
-		<div id="container" sclass="row"
-         viewModel="@id('vmt') @init('cestel.sercom.web.vm.ResourceVm')">
-			<apply id="contentInclude" mode="instant" sclass="content"
-				currentPage="@ref(vm.currentPage)"
-				templateURI="@load(currentPage.includeUri)"/>
-				<textbox id ="data" visible="false" value="@load(vm.currentPage.data)"/> 
-				
+			<div id="container"
+				viewModel="@id('vmt') @init('cestel.sercom.web.vm.ResourceVm')">
+				<apply id="contentInclude" mode="instant"
+					sclass="content" currentPage="@ref(vm.currentPage)"
+					templateURI="@load(currentPage.includeUri)" />
+				<textbox id="data" visible="false"
+					value="@load(vm.currentPage.data)" />
 
-</div>
+
+			</div>
 		</center>
 		<south>
 			<a href="layoutprincipal">

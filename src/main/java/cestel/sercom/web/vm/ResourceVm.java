@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.zkoss.bind.BindContext;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -15,20 +14,14 @@ import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.Sessions;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.select.annotation.VariableResolver;
-import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zk.ui.select.annotation.WireVariable;
-import org.zkoss.zul.Column;
-import org.zkoss.zul.Columns;
 import org.zkoss.zul.Grid;
 import org.zkoss.zul.Messagebox;
-import org.zkoss.zul.Row;
-import org.zkoss.zul.Rows;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
@@ -135,7 +128,7 @@ public class ResourceVm {
 						BindUtils.postGlobalCommand(null, null, "loadResources", null);
 
 						// show notification
-						ApplicationUtils.showInfo("message.Resource Eliminado");
+						ApplicationUtils.showInfo("message.registroEliminado");
 
 					}
 				}
@@ -149,11 +142,6 @@ public class ResourceVm {
 		}
 
 	}
-
-	Columns columnas;
-	Column columna;
-	Rows rows;
-	Row row;
 
 	@Command
 	@NotifyChange("resources")

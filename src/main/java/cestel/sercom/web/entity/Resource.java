@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Data;
 
 /**
@@ -34,6 +39,8 @@ public class Resource {
 	private SubDominio subdomid;
 
 	@OneToMany(mappedBy = "resource", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE }, orphanRemoval = true)
+	 @LazyCollection(LazyCollectionOption.FALSE)
+    @Fetch(value = FetchMode.SUBSELECT)
 	private List<PropResource> propResource;
 	
 	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE }, orphanRemoval = true)
