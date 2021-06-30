@@ -41,8 +41,6 @@ public class DnsVm {
 	// initialize filter to null (no value)
 	private String filter;
 
-//	@WireVariable
-//	private UserManager userMag;
 
 	@WireVariable
 	private DnsManager dnsMag;
@@ -78,6 +76,12 @@ public class DnsVm {
 	@NotifyChange("dns")
 	public void loadDns() {
 		this.dns = getDnsListFromDatabase();
+	}
+
+	@GlobalCommand
+	@NotifyChange("dnsCheck")
+	public void loadDnsCheck() {
+		dnsCheck.clear();
 	}
 
 	@Command
@@ -119,49 +123,44 @@ public class DnsVm {
 		// UIUtils.show("~./zul/appconfig/editarusuario.zul", null, usuario);
 		final HashMap<String, Object> map = new HashMap<String, Object>();
 		if (dns != null) {
-			
 
 			map.put("dns", dns);
 			// si va con el dns es mara modificar (con el map)
 			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, map);
-		} else if(dnsCheck!=null) {
+		} else if (dnsCheck != null && dnsCheck.size() > 0) {
 			map.put("dnsCheck", dnsCheck);
 			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, map);
 
-		}else {
+		} else {
 			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, null);
 		}
 		window.doModal();
+
 	}
 
 	@Command
 	@NotifyChange("dns")
 	public void showEditMulti() {
 
-		dnsCheck.stream().forEach(s -> {
-
-			System.out.println(s.getId());
-		});
 		showEdit(null);
+
 	}
 
 	@Command
-	//@NotifyChange("dns")
 	public void addCheckMulti(@BindingParam("dns") Dns dns) {
 
-		System.out.println(dns.getId());
 		if (dnsCheck.contains(dns))
 			dnsCheck.remove(dns);
 		else
 			dnsCheck.add(dns);
 	}
+
 	@Command
-	public void onSelectAll(
-			@ContextParam(ContextType.TRIGGER_EVENT) CheckEvent e) {
-		//this.selectedPersons = new ArrayList<Person>();
+	public void onSelectAll(@ContextParam(ContextType.TRIGGER_EVENT) CheckEvent e) {
+
 		if (e.isChecked())
 			dnsCheck.addAll(dns);
-		//BindUtils.postNotifyChange(null, null, this, "selectedPersons");
+
 	}
 
 }

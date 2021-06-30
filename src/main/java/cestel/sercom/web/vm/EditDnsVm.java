@@ -84,7 +84,10 @@ public class EditDnsVm {
 
 	@Init
 	public void init() {
+//		recupero el usuario de sesion
 		userLoginSession = (User) session.getAttribute("connectedUser");
+		
+		//recupero los parametros de la vista padre que envia por el map
 		this.dnsCheck = (List<Dns>) execution.getArg().get("dnsCheck");
 		mapDnsVm();
 
@@ -127,13 +130,14 @@ public class EditDnsVm {
 			dnsMag.saveOrUpdate(dns);
 			
 		}
+		//actualizo las variables de la vista padre.
 		BindUtils.postGlobalCommand(null, null, "loadDns", null);
-
+		BindUtils.postGlobalCommand(null, null, "loadDnsCheck", null);
 		wDns.detach();
 		if (dnsBean.getId() != null)
-			ApplicationUtils.showInfo("message.usuarioModificado");
+			ApplicationUtils.showInfo("message.dnsModificado");
 		else
-			ApplicationUtils.showInfo("message.usuarioCreado");
+			ApplicationUtils.showInfo("message.dnsCreado");
 
 	}
 
