@@ -25,7 +25,7 @@
 	<div sclass="container-fluid" apply="org.zkoss.bind.BindComposer"
 		viewModel="@id('headerVm') @init('cestel.sercom.web.vm.MenuVm')">
 
-		<include src="~./zul/headermenu.zul" />
+		<include src="/zul/headermenu.zul" />
 	</div>
 	<borderlayout hflex="true" vflex="true"
 		viewModel="@id('vm') @init('cestel.sercom.web.vm.LayoutPrincipalVM')">

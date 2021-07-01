@@ -348,7 +348,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 		final HashMap<String, Object> map = new HashMap<String, Object>();
 		// wResource.detach();
 		map.put("source", clase);
-		window = (Window) Executions.createComponents("~./zul/appconfig/editarresource.zul", null, map);
+		window = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
 
 		window.doModal();
 	}

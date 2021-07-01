@@ -32,6 +32,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             "/zkau/web/**/js/**",
             "/zkau/web/**/css/**",
             "/zkau/web/**/font/**",
+            "/zkau/web/**/img/**",
             "/zkau/web/**/zul/img/**"
     };
     // allow desktop cleanup after logout or when reloading login page
@@ -58,7 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
         .mvcMatchers("/","/login","/logout").permitAll()
        // .mvcMatchers("/menuzoomer").hasRole("100")
-       // .mvcMatchers("/appconfig").hasRole("100")
         
         //.antMatchers("/zkau/web/**/**.zul").denyAll() 
        // .antMatchers("/zkau/web/**/**/**.zul").denyAll()// calling a zul-page directly is not allowed -- should we put this in the auto-configuration to? --

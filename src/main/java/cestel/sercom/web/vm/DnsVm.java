@@ -126,13 +126,13 @@ public class DnsVm {
 
 			map.put("dns", dns);
 			// si va con el dns es mara modificar (con el map)
-			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, map);
+			window = (Window) Executions.createComponents("/zul/editardns.zul", null, map);
 		} else if (dnsCheck != null && dnsCheck.size() > 0) {
 			map.put("dnsCheck", dnsCheck);
-			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, map);
+			window = (Window) Executions.createComponents("/zul/editardns.zul", null, map);
 
 		} else {
-			window = (Window) Executions.createComponents("~./zul/appconfig/editardns.zul", null, null);
+			window = (Window) Executions.createComponents("/zul/editardns.zul", null, null);
 		}
 		window.doModal();
 

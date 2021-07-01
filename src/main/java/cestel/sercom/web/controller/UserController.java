@@ -28,7 +28,7 @@ public class UserController {
   @PreAuthorize("authenticated")
   @GetMapping("/layoutprincipal")
   public String layoutprincipal() {
-    return "appconfig/layoutprincipal";
+    return "layoutprincipal";
   }
   
 

@@ -10,12 +10,14 @@
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
+	<packaging>war</packaging>
 	<groupId>cestel.sercom</groupId>
 	<artifactId>zkConfigAppStart</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>zkConfigAppStart</name>
 	<description>proyecto de arranque de la aplicacion</description>
 	<properties>
+	 <start-class>cestel.sercom.ZkConfigAppStartApplication</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -26,7 +28,6 @@
 		<zk.version>9.0.1-Eval</zk.version>
 		<orika.version>1.5.4</orika.version>
 	</properties>
-
 	<dependencies>
 		<!-- STARTERS <dependency> <groupId>org.zkoss.zk</groupId> <artifactId>zkmax</artifactId> 
 			<version>3.6.2</version> </dependency> -->
@@ -52,7 +53,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<dependency>
+		 <dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
@@ -178,9 +179,15 @@
             <artifactId>hibernate-jpamodelgen</artifactId> 
            
         </dependency> 
+        <dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 	</dependencies>
 	<build>
+	 <finalName>configapp</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -200,7 +207,6 @@
 				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
-
 	</build>
 	<dependencyManagement>
 		<dependencies>

@@ -74,7 +74,7 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
         	   
            }else {
         	   
-        	   response.sendRedirect("/menuzoomer" ); 
+        	   response.sendRedirect("/configapp/menuzoomer" ); 
            }
 //        	   
 //        	   

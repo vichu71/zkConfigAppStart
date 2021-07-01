@@ -13,14 +13,14 @@
 	<div class = "login" vflex="true"
 		
 		viewModel="@id('vm') @init('cestel.sercom.web.vm.LoginVm')">
-		<h:form action="/login" method="POST" id="formLogin">
+		<h:form action="/configapp/login" method="POST" id="formLogin">
 			<hbox pack="center" align="center" width="100%" height="100%">
 				<vbox hflex="min" align="center">
 					<a href="http://www.cestel.es" target="_blank"
 						tooltiptext="Welcome to the SERCOM System">
-						<image src="img/logo.png" width="100px" />
+						<image src="../img/logo.png" width="100px" />
 					</a>
-					<image src="img/logo_sercom.png" width="200px" />
+					<image src="../img/logo_sercom.png" width="200px" />
 
 
 					<inputgroup>

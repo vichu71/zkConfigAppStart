@@ -171,9 +171,9 @@ public class UsuarioVm {
 
         map.put("usuario", usuario);
         //si va con el usuario es mara modificar (con el map)
-        window = (Window) Executions.createComponents("~./zul/appconfig/editarusuario.zul", null, map);
+        window = (Window) Executions.createComponents("/zul/editarusuario.zul", null, map);
 		}else {
-			 window = (Window) Executions.createComponents("~./zul/appconfig/editarusuario.zul", null, null);	
+			 window = (Window) Executions.createComponents("/zul/editarusuario.zul", null, null);	
 			
 		}
         window.doModal();

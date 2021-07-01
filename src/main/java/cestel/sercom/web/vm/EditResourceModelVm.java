@@ -326,7 +326,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		//wResource.detach();
 		//onCloseModal();
 			map.put("source", clase);
-			window = (Window) Executions.createComponents("~./zul/appconfig/editarresourcemodel.zul", null, map);
+			window = (Window) Executions.createComponents("/zul/editarresourcemodel.zul", null, map);
 		
 
 		window.doModal();
