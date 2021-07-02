@@ -17,7 +17,7 @@
 	<name>zkConfigAppStart</name>
 	<description>proyecto de arranque de la aplicacion</description>
 	<properties>
-	 <start-class>cestel.sercom.ZkConfigAppStartApplication</start-class>
+		<start-class>cestel.sercom.ZkConfigAppStartApplication</start-class>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
@@ -51,9 +51,13 @@
 					<groupId>org.springframework.boot</groupId>
 					<artifactId>spring-boot-starter-tomcat</artifactId>
 				</exclusion>
+				<exclusion>
+					<groupId>org.springframework.boot</groupId>
+					<artifactId>spring-boot-starter-logging</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
-		 <dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-undertow</artifactId>
 		</dependency>
@@ -87,9 +91,13 @@
 			<artifactId>zkplus</artifactId>
 			<version>9.5.0.3</version>
 			<scope>compile</scope>
-			<!-- Prevent Error class path contains multiple SLF4J bindings <exclusions> 
-				<exclusion> <artifactId>slf4j-jdk14</artifactId> <groupId>org.slf4j</groupId> 
-				</exclusion> </exclusions> -->
+			<!-- Prevent Error class path contains multiple SLF4J bindings -->
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-jdk14</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<!-- ZK CKEditor -->
@@ -174,12 +182,12 @@
 
 		</dependency>
 
-		<dependency> 
-            <groupId>org.hibernate</groupId> 
-            <artifactId>hibernate-jpamodelgen</artifactId> 
-           
-        </dependency> 
-        <dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-jpamodelgen</artifactId>
+
+		</dependency>
+		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
 			<scope>provided</scope>
@@ -187,7 +195,7 @@
 
 	</dependencies>
 	<build>
-	 <finalName>configapp</finalName>
+		<finalName>configapp</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
