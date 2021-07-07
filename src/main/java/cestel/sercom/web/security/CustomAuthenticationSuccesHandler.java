@@ -54,21 +54,21 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
         	  
         	   String dominioLogin = (String) session.getAttribute("dominio");
                Optional<Dominio> dominio = domMag.getDominioByName(dominioLogin);
-              if(dominio.isEmpty()) {
+              if(!dominio.isPresent()) {
             	  
             	  System.out.println("el dominio no existe");
             	  
-            	  response.sendRedirect("/login?errorDominio=true" );
+            	  response.sendRedirect("/configapp/login?errorDominio=true" );
             	  
               }else {
             	  
             	  if(usuarioDB.getDomid().getId().equals(dominio.get().getId())) {
-            		  response.sendRedirect("/menuzoomer" );
+            		  response.sendRedirect("/configapp/menuzoomer" );
             		  
             	  }else {
             		  
             		  System.out.println("el dominio no coincide");
-            		  response.sendRedirect("/login?errorDominio=true" );
+            		  response.sendRedirect("/configapp/login?errorDominio=true" );
             	  }
               }
         	   

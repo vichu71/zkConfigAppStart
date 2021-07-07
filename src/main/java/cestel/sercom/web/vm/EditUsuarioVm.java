@@ -152,17 +152,17 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 		user.setInfo(userVmBean.getInfo());
 		user.setProfilecode(
 				roles.stream().filter(namerol -> namerol.getDescripcion().equals(userVmBean.getProfilecode()))
-						.findFirst().orElseThrow());
+						.findFirst().orElseThrow(null));
 
 		if (!"-all-".equals(userVmBean.getDominio()))
 			user.setDomid(dominio.stream().filter(dominio -> dominio.getName().equals(userVmBean.getDominio()))
-					.findFirst().orElseThrow());
+					.findFirst().orElseThrow(null));
 		else
 			user.setDomid(null);
 		if (!"-all-".equals(userVmBean.getSubdomid()))
 			user.setSubdomid(
 					subDominio.stream().filter(subDominio -> subDominio.getName().equals(userVmBean.getSubdomid()))
-							.findFirst().orElseThrow());
+							.findFirst().orElseThrow(null));
 		else
 			user.setSubdomid(null);
 		user.setUsername(userVmBean.getUsername());
@@ -170,7 +170,7 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 
 		if (!"-none-".equals(userVmBean.getTeam()))
 			user.setResource(resource.stream().filter(resource -> resource.getName().equals(userVmBean.getTeam()))
-					.findFirst().orElseThrow());
+					.findFirst().orElseThrow(null));
 		else
 			user.setResource(null);
 		return user;

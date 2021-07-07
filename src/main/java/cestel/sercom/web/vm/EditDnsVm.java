@@ -190,11 +190,11 @@ public class EditDnsVm {
 		if (dns != null) {
 			dnsVmBean.setId(dns.getId());
 			dnsVmBean.setName(dns.getName());
-			dnsVmBean.setMediaComboSelecionado(dnsVmBean.getListMedia().stream().filter(f->f.getValue().equals(dns.getMediacode())).findFirst().orElseThrow());
-			dnsVmBean.setTypeComboSelecionado(dnsVmBean.getListType().stream().filter(f->f.getValue().equals(dns.getDntypecode())).findFirst().orElseThrow());
+			dnsVmBean.setMediaComboSelecionado(dnsVmBean.getListMedia().stream().filter(f->f.getValue().equals(dns.getMediacode())).findFirst().orElseThrow(null));
+			dnsVmBean.setTypeComboSelecionado(dnsVmBean.getListType().stream().filter(f->f.getValue().equals(dns.getDntypecode())).findFirst().orElseThrow(null));
 			dnsVmBean.setPeer(dns.getRemotepeer());
 			
-			dnsVmBean.setDeviceComboSelecionado(dnsVmBean.getListDevice().stream().filter(f->f.getLabel().equals(dns.getAddinsDev().getName())).findFirst().orElseThrow());
+			dnsVmBean.setDeviceComboSelecionado(dnsVmBean.getListDevice().stream().filter(f->f.getLabel().equals(dns.getAddinsDev().getName())).findFirst().orElseThrow(null));
 		}
 	}
 

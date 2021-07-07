@@ -12,17 +12,17 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 
 //para probar en local
-//public class ZkConfigAppStartApplication {
-//
-//	public static void main(String[] args) {
-//		SpringApplication.run(ZkConfigAppStartApplication.class, args);
-//	}
+public class ZkConfigAppStartApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ZkConfigAppStartApplication.class, args);
+	}
 //para la generacioon de war para el servidor de aplicaciones
-public class ZkConfigAppStartApplication extends SpringBootServletInitializer{	
-	@Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
-        return application.sources(ZkConfigAppStartApplication.class);
-    }
+//public class ZkConfigAppStartApplication extends SpringBootServletInitializer{	
+//	@Override
+//    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+//        return application.sources(ZkConfigAppStartApplication.class);
+//    }
 	
 	@Bean
 	public Validator validator() {

@@ -83,7 +83,7 @@ public class UsuarioVm {
 		
 		try {
 			// confirmation dialog
-			EventListener<Messagebox.ClickEvent> clickListener = new EventListener<>() {
+			EventListener<Messagebox.ClickEvent> clickListener = new EventListener<Messagebox.ClickEvent>() {
 				public void onEvent(Messagebox.ClickEvent event) throws Exception {
 					if (Messagebox.Button.YES.equals(event.getButton())) {
 

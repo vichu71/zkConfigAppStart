@@ -190,7 +190,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 					cadena = prop.getDefval();
 				} else {
 					cadena = listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(prop.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow();
+							.map(PropResource::getValue).findAny().orElseThrow(null);
 				}
 				String[] parts = cadena.split(";");
 
@@ -286,7 +286,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		{
 			if ("0".equals(
 					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow()))
+							.map(PropResource::getValue).findAny().orElseThrow(null)))
 				radiogroup.setSelectedItem(radiotrue);
 			else
 				radiogroup.setSelectedItem(radiofalse);
@@ -362,7 +362,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 				if (entry.getKey()
 						.equals(listaPropiedadesPorIdResource.stream()
 								.filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-								.map(PropResource::getValue).findAny().orElseThrow()))
+								.map(PropResource::getValue).findAny().orElseThrow(null)))
 
 					combobox.setSelectedItem(item);
 			}
@@ -384,7 +384,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 
 			textbox1.setValue(
 					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow());
+							.map(PropResource::getValue).findAny().orElseThrow(null));
 		}
 
 		createComponent();
