@@ -13,10 +13,13 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import lombok.extern.slf4j.Slf4j;
+
 /**
  * This is an example of minimal configuration for ZK + Spring Security, we open as less access as possible to run a ZK-based application.
  * Please understand the configuration and modify it upon your requirement.
  */
+@Slf4j
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -84,7 +87,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     	
     	BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(); // Strength set as 12
     	String encodedPassword = encoder.encode("1211");
-    	System.out.println("1211-> "+encodedPassword);
+    	log.info("1211-> "+encodedPassword);
 	    return encoder;
 	}
     

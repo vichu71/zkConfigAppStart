@@ -89,11 +89,7 @@
 				</div>
 				<div sclass="row mt-3">
 					<div >
-						<!-- <button sclass="btn-success"
-							label="${labels.action.save}" onClick="@command('saveUsuarios')" />
-							<button sclass="btn-danger"
-							label="${labels.action.cancel}"
-							onClick="@command('loadUsuarios')" /> -->
+						
 						<button label="${labels.action.add}"
 							onClick="@command('showEdit')" />
 					</div>

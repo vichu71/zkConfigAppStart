@@ -69,7 +69,7 @@ public class LoginVm extends Window {
         this.validator = SpringUtil.getApplicationContext().getBean(Validator.class);
         this.userlogin = new UserVmBean();
 
-       // System.out.println("[Edit VM] Initialized view-model with use case instance: {}");
+       // log.info("[Edit VM] Initialized view-model with use case instance: {}");
     }
     @AfterCompose
     public void doAfterComposer() {

@@ -1,6 +1,7 @@
 package cestel.sercom.web.security;
 
 import java.io.IOException;
+
 import java.security.Principal;
 import java.util.Collection;
 import java.util.Optional;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Component;
 import cestel.sercom.web.entity.Dominio;
 import cestel.sercom.web.service.DominioManager;
 import cestel.sercom.web.service.UserManager;
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component
 public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessHandler {
 
@@ -56,7 +59,7 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
                Optional<Dominio> dominio = domMag.getDominioByName(dominioLogin);
               if(!dominio.isPresent()) {
             	  
-            	  System.out.println("el dominio no existe");
+            	  log.info("el dominio no existe");
             	  
             	  response.sendRedirect("/configapp/login?errorDominio=true" );
             	  
@@ -67,7 +70,7 @@ public class CustomAuthenticationSuccesHandler implements AuthenticationSuccessH
             		  
             	  }else {
             		  
-            		  System.out.println("el dominio no coincide");
+            		  log.info("el dominio no coincide");
             		  response.sendRedirect("/configapp/login?errorDominio=true" );
             	  }
               }

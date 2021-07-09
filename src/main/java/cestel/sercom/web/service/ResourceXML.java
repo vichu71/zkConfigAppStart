@@ -9,7 +9,8 @@ import cestel.sercom.web.entity.PropResource;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.service.imp.ResourceXMLImpl;
 import cestel.sercom.web.util.ConfigMsgUtils;
-
+import lombok.extern.slf4j.Slf4j;
+@Slf4j
 @Component("resourceXml")
 public class ResourceXML implements ResourceXMLImpl {
 	
@@ -37,7 +38,7 @@ public class ResourceXML implements ResourceXMLImpl {
 		retval += composeDeleteReqAttributes(resource); 
 		retval += "/>";
 		retval += CONFIGMSG_TAIL;
-		System.out.println("retval-> " + retval);
+		log.info("retval-> " + retval);
 		
 	}
 
@@ -64,7 +65,7 @@ public class ResourceXML implements ResourceXMLImpl {
 		retval += composeProperties(prop);
 		retval += getCloseUpdateTag(resource.getResclass());
 		retval += CONFIGMSG_TAIL;
-		System.out.println("retval-> " + retval);
+		log.info("retval-> " + retval);
 		
 		return retval;
 	}
@@ -81,7 +82,7 @@ public class ResourceXML implements ResourceXMLImpl {
 		retval += composeReqAttributes(resource); 
 		retval += "/>";
 		retval += CONFIGMSG_TAIL;
-		System.out.println("retval-> " + retval);
+		log.info("retval-> " + retval);
 		return retval;
 		
 	}
@@ -118,7 +119,7 @@ public class ResourceXML implements ResourceXMLImpl {
 //
 //			retval += composeProperties(prop);
 //		}
-//		System.out.println("retval-> " + retval);
+//		log.info("retval-> " + retval);
 //		return retval;
 //	}
 

@@ -188,7 +188,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 	}
 
 	private void crearResource() throws SAXException {
-		resClassProp = decriptorMag.cargaDescriptor("ResourceDesc_" + source);
+		resClassProp = decriptorMag.cargaDescriptorResources("ResourceDesc_" + source);
 		// createND();
 		resClassProp.stream().forEach(prop -> {
 
@@ -259,7 +259,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 	}
 
 	private void modificarResource() throws SAXException {
-		System.out.println("modifico-> " + resource.getName());
+		log.info("modifico-> " + resource.getName());
 		name.setValue(resource.getName());
 		descripcion.setValue(resource.getInfo());
 		modificacion = true;
@@ -267,7 +267,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 
 		crearResource();
 
-		System.out.println("listaPropiedadesPorIdResource-> " + listaPropiedadesPorIdResource.size());
+		log.info("listaPropiedadesPorIdResource-> " + listaPropiedadesPorIdResource.size());
 
 	}
 
@@ -365,9 +365,9 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			combobox.appendChild(item);
 
 			if (!modificacion) {
-				System.out.println("name-> " + name);
-				System.out.println("para-> " + resourceVmBean.getSelecteditem());
-				System.out.println("entry.getKey()-> " + entry.getKey());
+				log.info("name-> " + name);
+				log.info("para-> " + resourceVmBean.getSelecteditem());
+				log.info("entry.getKey()-> " + entry.getKey());
 				if (entry.getKey().equals(resourceVmBean.getSelecteditem()))
 					combobox.setSelectedItem(item);
 				// si viene el combo sin nada inicializamos con -none-
@@ -376,7 +376,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 					combobox.setSelectedItem(item);
 
 				}
-				// System.out.println("combobox.getSelectedIndex();->
+				// log.info("combobox.getSelectedIndex();->
 				// "+combobox.getSelectedIndex());
 
 			} else {
@@ -518,7 +518,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 	}
 
 	private void addItem(String prop, Listbox listbox, Event event, String skill) {
-		System.out.println(skill);
+		log.info(skill);
 		if (skill != "")
 			addListItem(prop, listbox, 70, skill);
 
@@ -556,7 +556,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 				// atributosCelListAtto.set(atributosCelList);
 				atributosCelList = "";
 				propiedadAtto.set(propiedad);
-				System.out.println("grid------------------------------------------" + hijo.getUuid() + "-------> "
+				log.info("grid------------------------------------------" + hijo.getUuid() + "-------> "
 						+ " ---" + hijo.getAttribute("nombreatt") + "---" + hijo.getAttribute("typeatt"));
 				propiedadAtto.set((String) hijo.getAttribute("nombreatt"));
 			}
@@ -565,13 +565,13 @@ public class EditResourceVm extends SelectorComposer<Component> {
 				// List<String> listaDeListCell = new ArrayList<>();
 
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
-					// System.out.println("Listcell--------> " + " ---" +
+					// log.info("Listcell--------> " + " ---" +
 					// hijo.getAttribute("nombreatt") + "---" + hijo.getAttribute("typeatt"));
 					Listcell listcell = (Listcell) hijo;
-					// System.out.println(listcell.getLabel());
+					// log.info(listcell.getLabel());
 					// listaDeListCell.add(listcell.getLabel());
 					atributosCelList = atributosCelList + listcell.getLabel() + ";";
-					// System.out.println(atributosCelList);
+					// log.info(atributosCelList);
 					if (!atributosCelList.equals(""))
 						prop.put((String) hijo.getAttribute("nombreatt"),
 								atributosCelList.substring(0, atributosCelList.length() - 1));
@@ -582,14 +582,14 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			if (hijo instanceof Textbox && propiedadAtto.get() != null) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Textbox textbox = (Textbox) hijo;
-					// System.out.println("textbox--------> " + textbox.getValue());
+					// log.info("textbox--------> " + textbox.getValue());
 					prop.put((String) hijo.getAttribute("nombreatt"), textbox.getValue());
 				}
 			}
 			if (hijo instanceof Combobox) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Combobox combobox = (Combobox) hijo;
-					// System.out.println("combobox--------> " + combobox.getSelectedIndex()+" "+
+					// log.info("combobox--------> " + combobox.getSelectedIndex()+" "+
 					// combobox.getSelectedItem().getValue());
 					prop.put((String) hijo.getAttribute("nombreatt"), combobox.getSelectedItem().getValue());
 				}
@@ -597,7 +597,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 			if (hijo instanceof Radiogroup) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Radiogroup radiogroup = (Radiogroup) hijo;
-					// System.out.println("radiogroup--------> " + radiogroup.getSelectedIndex());
+					// log.info("radiogroup--------> " + radiogroup.getSelectedIndex());
 					prop.put((String) hijo.getAttribute("nombreatt"), radiogroup.getSelectedIndex() + "");
 				}
 			}
@@ -677,8 +677,8 @@ public class EditResourceVm extends SelectorComposer<Component> {
 	@Listen("onClick=#onSave")
 	public void onSave() throws CxException {
 
-		System.out.println(getName().getValue());
-		System.out.println(getDescripcion().getValue());
+		log.info(getName().getValue());
+		log.info(getDescripcion().getValue());
 
 		List<Component> listaHijos = divcontainer.getChildren();
 
@@ -720,7 +720,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 		}
 		resourceXml.updateMsg(resource, prop);
 
-		System.out.println(resource.getId());
+		log.info(resource.getId().toString());
 		BindUtils.postGlobalCommand(null, null, "loadResources", null);
 		// BindUtils.postGlobalCommand(null, null, "cargaCombosTeam", null);
 		divcontainer.detach();

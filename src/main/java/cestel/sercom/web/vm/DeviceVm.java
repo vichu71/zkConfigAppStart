@@ -25,7 +25,9 @@ import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.entity.Resource;
+import cestel.sercom.web.service.AddinsManager;
 import cestel.sercom.web.service.ResourceManager;
 import cestel.sercom.web.service.imp.ResourceXMLImpl;
 import cestel.sercom.web.util.ApplicationUtils;
@@ -37,59 +39,60 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class ResourceVm {
+public class DeviceVm {
 
-	private List<Resource> resources;
+	private List<Addins> devices;
 
 	// initialize filter to null (no value)
 	private String filter;
 
 	@WireVariable
-	private ResourceManager resourceMag;
+	private AddinsManager addinsMag;
 	@WireVariable
 	private ResourceXMLImpl resourceXml;
 
 	Grid grid1;
-	Window wResource;
+	Window wDevices;
 	Textbox data = new Textbox();
 
 	Session sess = Sessions.getCurrent();
 
 	String source = "";
-	
-	String titulo="";
 
-	
+	String titulo = "";
 
 	@Init
 	public void init(@ContextParam(ContextType.COMPONENT) Component comp) {
 
-		log.info("Init ResourceVM");
-		//se recupera el dato del textbox que es el que nos indica a que descriptor vamos
+		log.info("Init DeviceVM");
+		// se recupera el dato del textbox que es el que nos indica a que descriptor
+		// vamos
 		data = (Textbox) comp.getNextSibling();
 		if (data != null) {
 			source = data.getValue();
-			titulo= Labels.getLabel("title.header."+source);
+			titulo = Labels.getLabel("title.header." + source);
 		}
 		// load instructor list from the database
-		loadResources();
+		loadDevices();
 
 		// initialize filter to null (no value)
 		setFilter(null);
 	}
 
 	/**
-	 * Get the Resources list from the database
+	 * Get the Devices list from the database
 	 *
-	 * @return A list of Resources elements 
-	 * @see Resources
+	 * @return A list of Devices elements
+	 * @see Addins
 	 */
-	public List<Resource> getResourcesListFromDatabase() {
+	public List<Addins> getDevicesListFromDatabase() {
+		List<Addins> ala = addinsMag.getAll();
+
 		return getFilter() != null
-				? resourceMag.getFiltered(getFilter()).stream().filter(f -> f.getResclass().equals(source))
+				? addinsMag.getFiltered(getFilter()).stream().filter(f -> f.getAddinsDev().getDevgroup().equals(source))
 						.collect(Collectors.toList())
-				: resourceMag.getAll().stream().filter(f -> f.getResclass().equals(source))
-						.collect(Collectors.toList());
+				: addinsMag.getAll().stream().filter(f -> f.getAddinsDev() != null)
+						.filter(f -> f.getAddinsDev().getDevgroup().equals(source)).collect(Collectors.toList());
 	}
 
 	/**
@@ -98,15 +101,15 @@ public class ResourceVm {
 	 * @see Instructor
 	 */
 	@GlobalCommand
-	@NotifyChange("resources")
-	public void loadResources() {
+	@NotifyChange("devices")
+	public void loadDevices() {
 		log.info("source-> " + source);
-		this.resources = getResourcesListFromDatabase();
+		this.devices = getDevicesListFromDatabase();
 	}
 
 	@Command
-	@NotifyChange("resources")
-	public void removeResource(@BindingParam("resource") Resource resource) {
+	@NotifyChange("devices")
+	public void removeDevice(@BindingParam("device") Addins addins) {
 
 		try {
 			// confirmation dialog
@@ -116,10 +119,11 @@ public class ResourceVm {
 
 						// store ids of the new edited list
 
-						resourceMag.delete(resource);
-						
-					resourceXml.deleteMsg(resource);
-						BindUtils.postGlobalCommand(null, null, "loadResources", null);
+						addinsMag.delete(addins);
+
+						// el envio del xml pa luego
+						// resourceXml.deleteMsg(addins);
+						BindUtils.postGlobalCommand(null, null, "loadDevices", null);
 
 						// show notification
 						ApplicationUtils.showInfo("message.registroEliminado");
@@ -138,23 +142,18 @@ public class ResourceVm {
 	}
 
 	@Command
-	@NotifyChange("resources")
-	public void showEdit(@BindingParam("resource") Resource resource) {
-		// Window wResource;
-//		// UIUtils.show("~./zul/appconfig/editarusuario.zul", null, usuario);
+	@NotifyChange("devices")
+	public void showEdit(@BindingParam("addins") Addins addins) {
+
 		final HashMap<String, Object> map = new HashMap<String, Object>();
-		if (resources != null) {
-			
+		map.put("source", source);
+		if (devices != null)
 
-			map.put("resource", resource);
-			map.put("source", source);
-			wResource = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
-		} else {
-			map.put("source", source);
-			wResource = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
+			map.put("addins", addins);
 
-		}
-		wResource.doModal();
+		wDevices = (Window) Executions.createComponents("/zul/editardevice.zul", null, map);
+
+		wDevices.doModal();
 	}
 
 }

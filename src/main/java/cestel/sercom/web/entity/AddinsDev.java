@@ -1,7 +1,5 @@
 package cestel.sercom.web.entity;
 
-import java.util.List;
-
 import javax.persistence.*;
 
 import lombok.Data;
@@ -18,9 +16,12 @@ public class AddinsDev {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-
+	
+	
 	@Column
 	private String name;
+	
+	
 
 	@Column
 	private String devgroup;
@@ -29,10 +30,17 @@ public class AddinsDev {
 	private String media;
 	
 	@Transient
-	private String namedevroup;
+	private String namedevgroup;
 	
 	@Transient
 	private String IdString;
+	
+	
+
+	public AddinsDev() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
 	public Long getId() {
 		return id;
@@ -66,7 +74,7 @@ public class AddinsDev {
 		this.media = media;
 	}
 
-	public String getNamedevroup() {
+	public String getNamedevgroup() {
 		return name+" ("+devgroup+")";
 	}
 

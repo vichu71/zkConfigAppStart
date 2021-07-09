@@ -23,7 +23,7 @@ public class ResOptions {
 	@Column
 	private Long idprop;
 //	
-//	// bi-directional many-to-one association to Cuaderno
+//	
 //		@ManyToOne(cascade = { CascadeType.MERGE })
 //		@JoinColumn(name = "idprop")
 //		

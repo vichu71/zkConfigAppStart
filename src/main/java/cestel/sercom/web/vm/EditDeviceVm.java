@@ -4,11 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 import org.xml.sax.SAXException;
 import org.zkoss.bind.BindUtils;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -43,14 +45,19 @@ import org.zkoss.zul.Rows;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.entity.PropResource;
 import cestel.sercom.web.entity.ResClassProp;
 import cestel.sercom.web.entity.ResOptions;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.entity.User;
+import cestel.sercom.web.exception.CxException;
+import cestel.sercom.web.service.ConexionSercomManager;
 import cestel.sercom.web.service.DescriptorManager;
 import cestel.sercom.web.service.PropResourceManager;
 import cestel.sercom.web.service.ResourceManager;
+import cestel.sercom.web.service.imp.ResourceXMLImpl;
+import cestel.sercom.web.vm.bean.DeviceVmBean;
 import cestel.sercom.web.vm.bean.ResourceVmBean;
 import lombok.Getter;
 import lombok.Setter;
@@ -60,26 +67,32 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class EditResourceModelVm extends SelectorComposer<Component> {
+public class EditDeviceVm extends SelectorComposer<Component> {
 
-	@WireVariable
-	private ResourceManager resourceMag;
+//	@WireVariable
+//	private ResourceManager resourceMag;
+//
+//	@WireVariable
+//	private PropResourceManager propresourceMag;
+//
+//	@WireVariable
+//	private DescriptorManager decriptorMag;
+//
+//	@WireVariable
+//	private ResourceXMLImpl resourceXml;
+//
+//	@WireVariable
+//	private ConexionSercomManager conserMag;
 
-	@WireVariable
-	private PropResourceManager propresourceMag;
+//	private List<ResClassProp> resClassProp = new ArrayList<>();;
 
-	@WireVariable
-	private DescriptorManager decriptorMag;
-
-	private List<ResClassProp> resClassProp = new ArrayList<>();;
-
-	List<String> optResource = new ArrayList<>();
+//	List<String> optResource = new ArrayList<>();
 
 	// private String nombre;
 	@Wire
 	private Textbox name;
 	@Wire
-	private Textbox descripcion;
+	private Textbox createDN;
 
 	private String skill;
 
@@ -89,7 +102,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 
 	Map<String, String> valueLabelmap;
 
-	private ResourceVmBean resourceVmBean;
+	private DeviceVmBean deviceVmBean;
 
 	String propiedad = "";
 	AtomicReference<String> propiedadAtto = new AtomicReference<>();
@@ -106,7 +119,9 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 	private Div divcontainer;
 
 	@Wire
-	private Window wResource;
+	private Label titulo;
+//	@Wire
+//	private Window wResource;
 
 	Textbox textbox1;
 
@@ -139,7 +154,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 	Radio radiofalse;
 
 	private String source;
-	Resource resource;
+	Addins addins;
 
 	PropResource propresource;
 	User userLoginSession = null;
@@ -149,12 +164,12 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 
 	List<PropResource> listaPropiedadesPorIdResource = new ArrayList<>();
 	Component comp;
+
 	@Override
 	public void doAfterCompose(Component comp) throws Exception {
-		onCloseModal();
+
 		this.comp = comp;
 		super.doAfterCompose(comp);
-		
 		// Selectors.wireVariables(page, this,
 		// Selectors.newVariableResolvers(getClass(), null));
 //      ListModelList<String> countryModel = new ListModelList<String>(CommonInfoService.getCountryList());
@@ -165,99 +180,106 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 
 		// estos son los atributos que vienen desde la creaccion de la ventana
 		this.source = (String) execution.getArg().get("source");
-		this.resource = (Resource) execution.getArg().get("resource");
-		resourceVmBean = new ResourceVmBean();
-		if (resource == null)
+		this.addins = (Addins) execution.getArg().get("addins");
+		addLabel(titulo,source, "");
+		deviceVmBean = new DeviceVmBean();
+		
+		if (addins == null)
 			crearResource();
 		else
 			modificarResource();
 	}
 
 	private void crearResource() throws SAXException {
-		resClassProp = decriptorMag.cargaDescriptor("ResourceDesc_" + source);
-		// createND();
-		resClassProp.stream().forEach(prop -> {
-
-			log.info(prop.getType());
-			resourceVmBean.setName(prop.getName());
-			resourceVmBean.setInfo(prop.getDescripcion());
-			resourceVmBean.setType(prop.getType());
-
-			if ("STRING_LIST".equals(prop.getType())) {
-				String cadena = "";
-
-				if (!modificacion) {
-					cadena = prop.getDefval();
-				} else {
-					cadena = listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(prop.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow(null);
-				}
-				String[] parts = cadena.split(";");
-
-				listSkill = new ListModelList<String>(parts);
-
-				createSL();
-			} else if ("STRING".equals(prop.getType())) {
-
-				createS();
-			} else if ("OPTION".equals(prop.getType())) {
-
-				resourceVmBean.setSelecteditem(prop.getDefval());
-				valueLabelmap = prop.getResOptions().stream()
-						.collect(Collectors.toMap(ResOptions::getValue, ResOptions::getLabel));
-
-				createOP();
-			} else if ("BOOLEAN".equals(prop.getType())) {
-
-				resourceVmBean.setSelecteditem(prop.getDefval());
-				createBOO();
-			} else if ("INTEGER".equals(prop.getType())) {
-
-				resourceVmBean.setSelecteditem(prop.getDefval());
-				createS();
-			} else if ("RESOURCE".equals(prop.getType())) {
-
-				resourceVmBean.setSelecteditem(prop.getDefval());
-				resourceVmBean.setClaseresource(prop.getResClassCode());
-				valueLabelmap = new HashMap<>();
-//				getResourceByTypo(prop.getResClassCode());
+//		resClassProp = decriptorMag.cargaDescriptorResources("ResourceDesc_" + source);
+//		// createND();
+//		resClassProp.stream().forEach(prop -> {
+//
+//			log.info(prop.getType());
+//			resourceVmBean.setName(prop.getName());
+//			resourceVmBean.setInfo(prop.getDescripcion());
+//			resourceVmBean.setType(prop.getType());
+//
+//			if ("STRING_LIST".equals(prop.getType())) {
+//				Optional<String> cadenaopt =Optional.empty();
+//				String cadena="";
+//
+//				if (!modificacion) {
+//					cadena = prop.getDefval();
+//				} else {
+//					cadenaopt = listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(prop.getName()))
+//							.map(PropResource::getValue).findAny();
+//					if(cadenaopt.isPresent()) {
+//						
+//						cadena=cadenaopt.get();
+//					}
+//				}
+//				String[] parts = cadena.split(";");
+//
+//				listSkill = new ListModelList<String>(parts);
+//
+//				createSL();
+//			} else if ("STRING".equals(prop.getType())) {
+//
+//				createS();
+//			} else if ("OPTION".equals(prop.getType())) {
+//
+//				resourceVmBean.setSelecteditem(prop.getDefval());
+//				valueLabelmap = prop.getResOptions().stream()
+//						.collect(Collectors.toMap(ResOptions::getValue, ResOptions::getLabel));
+//
+//				createOP();
+//			} else if ("BOOLEAN".equals(prop.getType())) {
+//
+//				resourceVmBean.setSelecteditem(prop.getDefval());
+//				createBOO();
+//			} else if ("INTEGER".equals(prop.getType())) {
+//
+//				resourceVmBean.setSelecteditem(prop.getDefval());
+//				createS();
+//			} else if ("RESOURCE".equals(prop.getType())) {
+//
+//				resourceVmBean.setSelecteditem(prop.getDefval());
+//				resourceVmBean.setClaseresource(prop.getResClassCode());
+//				valueLabelmap = new HashMap<>();
+////				getResourceByTypo(prop.getResClassCode());
+////				valueLabelmap.put("-none-", "-none-");
+//
+//				valueLabelmap = getResourceByTypo(prop.getResClassCode()).stream()
+//						.collect(Collectors.toMap(Resource::getIdString, Resource::getName));
 //				valueLabelmap.put("-none-", "-none-");
-
-				valueLabelmap = getResourceByTypo(prop.getResClassCode()).stream()
-						.collect(Collectors.toMap(Resource::getName, Resource::getName));
-				valueLabelmap.put("-none-", "-none-");
-				createOP();
-			}
-
-		});
+//				createOP();
+//			}
+//
+//		});
 	}
 
-	public List<Resource> getResourceByTypo(String classe) {
-		List<Resource> listResources = resourceMag.getResourcebyClase(classe);
-		return listResources;
-
-		// cmbTeam.setSelectedIndex(teamname.size()-1);
-	}
+//	public List<Resource> getResourceByTypo(String classe) {
+//		List<Resource> listResources = resourceMag.getResourcebyClase(classe);
+//		return listResources;
+//
+//		// cmbTeam.setSelectedIndex(teamname.size()-1);
+//	}
 
 	private void modificarResource() throws SAXException {
-		System.out.println("modifico-> " + resource.getName());
-		name.setValue(resource.getName());
-		descripcion.setValue(resource.getInfo());
-		modificacion = true;
-		listaPropiedadesPorIdResource = resource.getPropResource();
-
-		crearResource();
-
-		System.out.println("listaPropiedadesPorIdResource-> " + listaPropiedadesPorIdResource.size());
-
+//		log.info("modifico-> " + resource.getName());
+//		name.setValue(resource.getName());
+//		descripcion.setValue(resource.getInfo());
+//		modificacion = true;
+//		listaPropiedadesPorIdResource = resource.getPropResource();
+//
+//		crearResource();
+//
+//		log.info("listaPropiedadesPorIdResource-> " + listaPropiedadesPorIdResource.size());
+//
 	}
 
 	private void createBOO() {
 		plantillaColumnas();
-		addLabel(label1, resourceVmBean.getName(), "");
+		addLabel(label1, deviceVmBean.getName(), "");
 		createComponent();
 
-		createRadiogroup(resourceVmBean.getName());
+		createRadiogroup(deviceVmBean.getName());
 
 		row.appendChild(radiogroup);
 	}
@@ -276,7 +298,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		radiogroup.appendChild(radiofalse);
 
 		if (!modificacion) {
-			if ("true".equals(resourceVmBean.getSelecteditem()))
+			if ("true".equals(deviceVmBean.getSelecteditem()))
 				radiogroup.setSelectedItem(radiotrue);
 			else
 				radiogroup.setSelectedItem(radiofalse);
@@ -284,12 +306,16 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		} else
 
 		{
-			if ("0".equals(
-					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow(null)))
-				radiogroup.setSelectedItem(radiotrue);
-			else
-				radiogroup.setSelectedItem(radiofalse);
+			Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+					.filter(fil -> fil.getName().equals(deviceVmBean.getName())).map(PropResource::getValue)
+					.findAny();
+
+			if (propiedad.isPresent()) {
+				if ("0".equals(propiedad.get()))
+					radiogroup.setSelectedItem(radiotrue);
+				else
+					radiogroup.setSelectedItem(radiofalse);
+			}
 
 		}
 
@@ -297,13 +323,13 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 
 	private void createOP() {
 		plantillaColumnas();
-		addLabel(label1, resourceVmBean.getName(), "");
+		addLabel(label1, deviceVmBean.getName(), "");
 		createComponent();
-		createCombobox(resourceVmBean.getName());
+		createCombobox(deviceVmBean.getName());
 
 		row.appendChild(combobox);
-		if (resourceVmBean.getType().equals("RESOURCE"))
-			createBotonResource(resourceVmBean.getClaseresource());
+//		if (deviceVmBean.getType().equals("RESOURCE"))
+//			createBotonResource(deviceVmBean.getClaseresource());
 	}
 
 	private void createBotonResource(String clase) {
@@ -315,7 +341,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 //		onClick="@command('showCreateTeam', usuario=vm.userVmBean)" tooltiptext="New Team"/>
 		boton.setIconSclass("z-icon-edit");
 		boton.setSclass("btn-warning");
-		boton.addEventListener(Events.ON_CLICK, (Event event) -> showWindowResource(event,clase));
+		boton.addEventListener(Events.ON_CLICK, (Event event) -> showWindowResource(event, clase));
 		row.appendChild(boton);
 
 	}
@@ -323,11 +349,9 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 	private void showWindowResource(Event event, String clase) {
 		Window window = null;
 		final HashMap<String, Object> map = new HashMap<String, Object>();
-		//wResource.detach();
-		//onCloseModal();
-			map.put("source", clase);
-			window = (Window) Executions.createComponents("/zul/editarresourcemodel.zul", null, map);
-		
+		// wResource.detach();
+		map.put("source", clase);
+		window = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
 
 		window.doModal();
 	}
@@ -344,10 +368,10 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 			combobox.appendChild(item);
 
 			if (!modificacion) {
-				System.out.println("name-> " + name);
-				System.out.println("para-> " + resourceVmBean.getSelecteditem());
-				System.out.println("entry.getKey()-> " + entry.getKey());
-				if (entry.getKey().equals(resourceVmBean.getSelecteditem()))
+				log.info("name-> " + name);
+				log.info("para-> " + deviceVmBean.getSelecteditem());
+				log.info("entry.getKey()-> " + entry.getKey());
+				if (entry.getKey().equals(deviceVmBean.getSelecteditem()))
 					combobox.setSelectedItem(item);
 				// si viene el combo sin nada inicializamos con -none-
 				else if (entry.getKey().equals("-none-")) {
@@ -355,16 +379,21 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 					combobox.setSelectedItem(item);
 
 				}
-				// System.out.println("combobox.getSelectedIndex();->
+				// log.info("combobox.getSelectedIndex();->
 				// "+combobox.getSelectedIndex());
 
 			} else {
-				if (entry.getKey()
-						.equals(listaPropiedadesPorIdResource.stream()
-								.filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-								.map(PropResource::getValue).findAny().orElseThrow(null)))
 
-					combobox.setSelectedItem(item);
+				Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+						.filter(fil -> fil.getName().equals(deviceVmBean.getName())).map(PropResource::getValue)
+						.findAny();
+
+				if (propiedad.isPresent()) {
+					if (entry.getKey().equals(propiedad.get())) {
+
+						combobox.setSelectedItem(item);
+					}
+				}
 			}
 		}
 
@@ -374,17 +403,20 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		plantillaColumnas();
 
 		textbox1 = new Textbox();
-		addLabel(label1, resourceVmBean.getName(), "");
-		// textbox1.setName(resourceVmBean.getName());
-		textbox1.setAttribute("nombreatt", resourceVmBean.getName());
+		addLabel(label1, deviceVmBean.getName(), "");
+		// textbox1.setName(deviceVmBean.getName());
+		textbox1.setAttribute("nombreatt", deviceVmBean.getName());
 
 		if (!modificacion) {
 			textbox1.setValue("");
 		} else {
 
-			textbox1.setValue(
-					listaPropiedadesPorIdResource.stream().filter(fil -> fil.getName().equals(resourceVmBean.getName()))
-							.map(PropResource::getValue).findAny().orElseThrow(null));
+			Optional<String> propiedad = listaPropiedadesPorIdResource.stream()
+					.filter(fil -> fil.getName().equals(deviceVmBean.getName())).map(PropResource::getValue)
+					.findAny();
+
+			if (propiedad.isPresent())
+				textbox1.setValue(propiedad.get());
 		}
 
 		createComponent();
@@ -420,9 +452,10 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		listbox.setMultiple(true);
 
 		for (int ite = 0; ite < listSkill.size(); ite++) {
-			if (!listSkill.get(ite).equals("")) 
-			addListItem(prop, listbox, ite, null);
+			if (!listSkill.get(ite).equals(""))
+				addListItem(prop, listbox, ite, null);
 		}
+		addListItem(prop, listbox, -1, null);
 
 		columna3.setWidth("200px");
 		columnas1.appendChild(columna3);
@@ -450,33 +483,45 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		listitem = new Listitem();
 		Listcell listcellicon = new Listcell();
 		Listcell listcelltext = new Listcell();
-		// si es añadida del listado o por el usuario. si skill es !null el usuario
-		// añade
-		if (skill == null) {
-
-			listcelltext.setLabel(listSkill.get(ite));
-
+		// tenemos que meter un iten vacio para que nos pueda crear el componente
+		// dinamicamente,
+		if (ite == -1) {
 			listitem.appendChild(listcelltext);
-			listcelltext.setAttribute("nombreatt", resourceVmBean.getName());
+			listitem.appendChild(listcellicon);
+			listitem.setDroppable("true");
+			listcelltext.setAttribute("nombreatt", deviceVmBean.getName());
+			listbox.appendChild(listitem);
 
 		} else {
+			// si es añadida del listado o por el usuario. si skill es !null el usuario
+			// añade
+			if (skill == null) {
 
-			listcelltext.setLabel(skill);
-			listitem.appendChild(listcelltext);
-			listcelltext.setAttribute("nombreatt", prop);
+				listcelltext.setLabel(listSkill.get(ite));
+
+				listitem.appendChild(listcelltext);
+				listcelltext.setAttribute("nombreatt", deviceVmBean.getName());
+
+			} else {
+
+				listcelltext.setLabel(skill);
+				listitem.appendChild(listcelltext);
+				listcelltext.setAttribute("nombreatt", prop);
+			}
+			listcellicon.addEventListener(Events.ON_CLICK, (Event event) -> deleteItem(listbox, event));
+
+			listcellicon.setIconSclass("fa fa-trash azul");
+			listitem.appendChild(listcellicon);
+			listitem.setDraggable("true");
+			listitem.setDroppable("true");
+			listitem.addEventListener(Events.ON_DROP,
+					(DropEvent event) -> moveToTop(listbox, event, event.getDragged()));
+			listbox.appendChild(listitem);
 		}
-		listcellicon.addEventListener(Events.ON_CLICK, (Event event) -> deleteItem(listbox, event));
-
-		listcellicon.setIconSclass("fa fa-trash azul");
-		listitem.appendChild(listcellicon);
-		listitem.setDraggable("true");
-		listitem.setDroppable("true");
-		listitem.addEventListener(Events.ON_DROP, (DropEvent event) -> moveToTop(listbox, event, event.getDragged()));
-		listbox.appendChild(listitem);
 	}
 
 	private void addItem(String prop, Listbox listbox, Event event, String skill) {
-		System.out.println(skill);
+		log.info(skill);
 		if (skill != "")
 			addListItem(prop, listbox, 70, skill);
 
@@ -514,7 +559,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 				// atributosCelListAtto.set(atributosCelList);
 				atributosCelList = "";
 				propiedadAtto.set(propiedad);
-				System.out.println("grid------------------------------------------" + hijo.getUuid() + "-------> "
+				log.info("grid------------------------------------------" + hijo.getUuid() + "-------> "
 						+ " ---" + hijo.getAttribute("nombreatt") + "---" + hijo.getAttribute("typeatt"));
 				propiedadAtto.set((String) hijo.getAttribute("nombreatt"));
 			}
@@ -523,16 +568,16 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 				// List<String> listaDeListCell = new ArrayList<>();
 
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
-					// System.out.println("Listcell--------> " + " ---" +
+					// log.info("Listcell--------> " + " ---" +
 					// hijo.getAttribute("nombreatt") + "---" + hijo.getAttribute("typeatt"));
 					Listcell listcell = (Listcell) hijo;
-					// System.out.println(listcell.getLabel());
+					// log.info(listcell.getLabel());
 					// listaDeListCell.add(listcell.getLabel());
 					atributosCelList = atributosCelList + listcell.getLabel() + ";";
-					// System.out.println(atributosCelList);
-					// if (!atributosCelList.equals(""))
-					prop.put((String) hijo.getAttribute("nombreatt"),
-							atributosCelList.substring(0, atributosCelList.length() - 1));
+					// log.info(atributosCelList);
+					if (!atributosCelList.equals(""))
+						prop.put((String) hijo.getAttribute("nombreatt"),
+								atributosCelList.substring(0, atributosCelList.length() - 1));
 				}
 
 			}
@@ -540,14 +585,14 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 			if (hijo instanceof Textbox && propiedadAtto.get() != null) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Textbox textbox = (Textbox) hijo;
-					// System.out.println("textbox--------> " + textbox.getValue());
+					// log.info("textbox--------> " + textbox.getValue());
 					prop.put((String) hijo.getAttribute("nombreatt"), textbox.getValue());
 				}
 			}
 			if (hijo instanceof Combobox) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Combobox combobox = (Combobox) hijo;
-					// System.out.println("combobox--------> " + combobox.getSelectedIndex()+" "+
+					// log.info("combobox--------> " + combobox.getSelectedIndex()+" "+
 					// combobox.getSelectedItem().getValue());
 					prop.put((String) hijo.getAttribute("nombreatt"), combobox.getSelectedItem().getValue());
 				}
@@ -555,7 +600,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 			if (hijo instanceof Radiogroup) {
 				if (propiedadAtto.get().equals(hijo.getAttribute("nombreatt"))) {
 					Radiogroup radiogroup = (Radiogroup) hijo;
-					// System.out.println("radiogroup--------> " + radiogroup.getSelectedIndex());
+					// log.info("radiogroup--------> " + radiogroup.getSelectedIndex());
 					prop.put((String) hijo.getAttribute("nombreatt"), radiogroup.getSelectedIndex() + "");
 				}
 			}
@@ -569,7 +614,7 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 	}
 
 	private void createComponent() {
-		label2.setTooltiptext(resourceVmBean.getInfo());
+		label2.setTooltiptext(deviceVmBean.getInfo());
 
 		label2.setSclass("fa fa-info fa-lg azul");
 		row.appendChild(label1);
@@ -606,86 +651,85 @@ public class EditResourceModelVm extends SelectorComposer<Component> {
 		columna4.setWidth("100px");
 		columnas.appendChild(columna4);
 
-		grid1.setAttribute("nombreatt", resourceVmBean.getName());
-		grid1.setAttribute("typeatt", resourceVmBean.getType());
+		grid1.setAttribute("nombreatt", deviceVmBean.getName());
+		grid1.setAttribute("typeatt", deviceVmBean.getType());
 		grid1.appendChild(columnas);
 	}
 
 	private void createSL() {
 		plantillaColumnas();
-//		grid1.setAttribute("nombreatt", resourceVmBean.getName());
-//		grid1.setAttribute("typeatt", resourceVmBean.getType());
+//		grid1.setAttribute("nombreatt", deviceVmBean.getName());
+//		grid1.setAttribute("typeatt", deviceVmBean.getType());
 //		grid1.appendChild(columnas);
 
-		addLabel(label1, resourceVmBean.getName(), "label-required");
+		addLabel(label1, deviceVmBean.getName(), "label-required");
 
 		createComponent();
-		row.appendChild(createFormProp(resourceVmBean.getName()));
+		row.appendChild(createFormProp(deviceVmBean.getName()));
 	}
 
 	@Listen("onClick=#onClose")
 	public void onClose() {
-		divcontainer.detach();
-		divcontainer = null;
-		resClassProp.clear();
-		comp.detach();
-		//wResource.detach();
+//		divcontainer.detach();
+//		divcontainer = null;
+//		resClassProp.clear();
+//		comp.detach();
+		// wResource.detach();
 	}
-	
-	public void onCloseModal() {
-		//divcontainer.detach();
-		//divcontainer = null;
-		resClassProp.clear();
-		//comp.detach();
-		//wResource.detach();
-	}
-	
 
 	@Listen("onClick=#onSave")
-	public void onSave() {
+	public void onSave() throws CxException {
 
-		System.out.println(getName().getValue());
-		System.out.println(getDescripcion().getValue());
-
-		List<Component> listaHijos = divcontainer.getChildren();
-
-		readDataReq(listaHijos);
-
-		if (resource == null)
-			resource = new Resource();
-
-		resource.setName(getName().getValue());
-		resource.setInfo(getDescripcion().getValue());
-		resource.setResclass(source);
-		resource.setNodeid(null);
-		resource.setSubdomid(userLoginSession.getSubdomid());
-		// resource.setPropResource(null);
-		resource = resourceMag.saveOrUpdate(resource);
-		propresourceMag.deleteByResource(resource);
-
-		for (Map.Entry<String, String> entry : prop.entrySet()) {
-
-			// List<PropResource> listaPropiedadesPorIdResource =
-			// resource.getPropResource();
-
-			propresource = new PropResource();
-			if (entry.getKey() != null)
-
-				if (entry.getValue() != null) {
-					propresource.setResource(resource);
-					propresource.setValue(entry.getValue());
-					propresource.setName(entry.getKey());
-				}
-			propresource = propresourceMag.saveOrUpdate(propresource);
-		}
-
-		System.out.println(resource.getId());
-		BindUtils.postGlobalCommand(null, null, "loadResources", null);
-		// BindUtils.postGlobalCommand(null, null, "cargaCombosTeam", null);
-		divcontainer.detach();
-		divcontainer = null;
-		resClassProp.clear();
-		comp.detach();
+//		log.info(getName().getValue());
+//		log.info(getDescripcion().getValue());
+//
+//		List<Component> listaHijos = divcontainer.getChildren();
+//
+//		readDataReq(listaHijos);
+//
+//		if (resource == null)
+//			resource = new Resource();
+//
+//		resource.setName(getName().getValue());
+//		resource.setInfo(getDescripcion().getValue());
+//		resource.setResclass(source);
+//		resource.setNodeid(null);
+//		resource.setSubdomid(userLoginSession.getSubdomid());
+//		// resource.setPropResource(null);
+//		resource = resourceMag.saveOrUpdate(resource);
+//
+//		propresourceMag.deleteByResource(resource);
+//
+//		for (Map.Entry<String, String> entry : prop.entrySet()) {
+//
+//			// List<PropResource> listaPropiedadesPorIdResource =
+//			// resource.getPropResource();
+//
+//			propresource = new PropResource();
+//			if (entry.getKey() != null)
+//
+//				if (entry.getValue() != null) {
+//					propresource.setResource(resource);
+//					propresource.setValue(entry.getValue());
+//					propresource.setName(entry.getKey());
+//				}
+//			propresource = propresourceMag.saveOrUpdate(propresource);
+//		}
+//		// crear configMsg
+//
+//		if (!modificacion) {
+//			resourceXml.createMsg(resource, modificacion);
+//			// conserMag.doConfig();
+//		}
+//		resourceXml.updateMsg(resource, prop);
+//
+//		log.info(resource.getId().toString());
+//		BindUtils.postGlobalCommand(null, null, "loadResources", null);
+//		// BindUtils.postGlobalCommand(null, null, "cargaCombosTeam", null);
+//		divcontainer.detach();
+//		divcontainer = null;
+//		resClassProp.clear();
+//		comp.detach();
 	}
 //	private void createND() {
 //	Column columna1 = new Column();

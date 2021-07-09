@@ -1,7 +1,8 @@
 <?page title="new page title" contentType="text/html;charset=UTF-8"?>
 <zk>
 
-	<div viewModel="@id('dnsVm') @init('cestel.sercom.web.vm.DnsVm')">
+	<div
+		viewModel="@id('deviceVm') @init('cestel.sercom.web.vm.DeviceVm')">
 		<div>
 			<groupbox closable="false">
 				<caption>
@@ -10,11 +11,11 @@
 				<div>
 					<div>
 						<hlayout>
-							<textbox value="@bind(dnsVm.filter)"
-								onOK="@global-command('loadDns')"
+							<textbox value="@bind(deviceVm.filter)"
+								onOK="@global-command('loadDevice')"
 								placeholder="${labels.ph.searchDns}" hflex="3" />
 							<button iconSclass="z-icon-search"
-								onClick="@global-command('loadDns')" hflex="0.5" />
+								onClick="@global-command('loadDevice')" hflex="0.5" />
 							<label value="" hflex="10" />
 							<label value="Domain:" hflex="0.5" />
 							<label
@@ -26,8 +27,9 @@
 				</div>
 				<div sclass="mt-3">
 					<div>
-						<listbox model="@load(dnsVm.dns)"
-							checkmark="true" mold="paging" pageSize="10" multiple="true" onCheckSelectAll="@command('onSelectAll')">
+						<listbox model="@load(deviceVm.devices)"
+							checkmark="true" mold="paging" pageSize="10" multiple="true"
+							onCheckSelectAll="@command('onSelectAll')">
 							<listhead>
 								<listheader width="50px" />
 								<listheader
@@ -36,13 +38,16 @@
 									label="${labels.column.media}" align="left"
 									sort="auto(mediacode)" />
 								<listheader
-									label="${labels.column.type}" align="left"
+									label="${labels.column.family}" align="left"
 									sort="auto(dntypecode)" />
 								<listheader
-									label="${labels.column.peer}" align="left"
+									label="${labels.column.type}" align="left"
 									sort="auto(remotepeer)" />
 								<listheader
-									label="${labels.column.device}" align="left"
+									label="${labels.column.version}" align="left"
+									sort="auto(addinsDev.name)" />
+								<listheader
+									label="${labels.column.dn}" align="left"
 									sort="auto(addinsDev.name)" />
 								<listheader align="left" />
 
@@ -50,25 +55,27 @@
 							</listhead>
 							<template name="model">
 								<listitem context="editPopup"
-									onClick="@command('addCheckMulti', dns=each)">
+									onClick="@command('addCheckMulti', device=each)">
 									<listcell height="30px" />
-									<listcell label="@load(each.name)" />
 									<listcell
-										label="@load(each.mediacode)" />
+										label="@load(each.addinsDev.name)" />
 									<listcell
-										label="@load(each.dntypecode)" />
+										label="@load(each.addinsDev.media)" />
 									<listcell
-										label="@load(each.remotepeer)" />
+										label="@load(each.family)" />
+									<listcell label="@load(each.type)" />
 									<listcell
-										label="@load(each.addinsDev.namedevgroup)" />
+										label="" />
+									<listcell
+										label="@load(each.version)" />
 									<listcell height="30px">
 										<div height="30px">
 											<button sclass="btn-success"
 												iconSclass="z-icon-pencil"
-												onClick="@command('showEdit', dns=each)" />
+												onClick="@command('showEdit', device=each)" />
 											<button sclass="btn-danger"
 												iconSclass="z-icon-trash"
-												onClick="@command('removeDns', dns=each)" />
+												onClick="@command('removeDevice', device=each)" />
 										</div>
 									</listcell>
 								</listitem>
@@ -91,7 +98,4 @@
 				onClick="@command('removeDnsMulti')" />
 		</menupopup>
 	</div>
-
-
-
 </zk>
