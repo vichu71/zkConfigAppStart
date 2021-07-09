@@ -34,43 +34,43 @@
     <div width="900px" height="350px" sclass="gallery" w:onAfterSize="flyInChildren.call(this.$n());">
        
             <div if="${labels.LoginApp.IsAccessibleConfigApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_configuracion)">
-                <a href="../layoutprincipal"><image src="../img/menu_configuracion.jpg" width="80%"/></a>
+                <a href="layoutprincipal"><image src="img/menu_configuracion.jpg" width="80%"/></a>
                  <label value="${labels.LoginApp.TextForConfigApp}" />        
             </div>
              <div  if="${labels.LoginApp.IsAccessibleStatsApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);"  visible="@load( vm.rolesbean.menu_estadisticas)">
-                <a href="botonesiconos"> <image src="../img/menu_estadisticas.jpg" width="77%"/> </a>  
+                <a href="botonesiconos"> <image src="img/menu_estadisticas.jpg" width="77%"/> </a>  
                  <label value="${labels.LoginApp.TextForStatsApp}" />              
             </div>
              <div if="${labels.LoginApp.IsAccessibleMonApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_monitorizaciones)">
-               <a href="pruebasComponent">   <image src="../img/menu_Monitorizaciones.jpg" width="80%"/> </a> 
+               <a href="pruebasComponent">   <image src="img/menu_Monitorizaciones.jpg" width="80%"/> </a> 
                  <label value="${labels.LoginApp.TextForMonApp}" />                
             </div>
              <div if="${labels.LoginApp.IsAccessibleRecApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_grabacion)">
-                <image src="../img/menu_Grabacion.jpg" width="100%"/>
+                <image src="img/menu_Grabacion.jpg" width="100%"/>
                  <label value="${labels.LoginApp.TextForRecApp}" />                 
             </div>
              <div if="${labels.LoginApp.IsAccessibleWebCall}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_webCall)">
-                <image src="../img/menu_siavox.jpg" width="100%"/>  
+                <image src="img/menu_siavox.jpg" width="100%"/>  
                  <label value="${labels.LoginApp.TextForWebCall}" />               
             </div>
              <div if="${labels.LoginApp.IsAccessibleCCDLoaderApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_ccdloader)">
-                <image src="../img/menu_Dialer.jpg" width="90%"/> 
+                <image src="img/menu_Dialer.jpg" width="90%"/> 
                  <label value="${labels.LoginApp.TextForCCDLoaderApp}" />                
             </div>
              <div if="${labels.LoginApp.IsAccessibleViApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_viapp)">
-                <image src="../img/menu_Loader.jpg" width="90%"/>  
+                <image src="img/menu_Loader.jpg" width="90%"/>  
  				<label value="${labels.LoginApp.TextForViApp}" />              
             </div>
              <div if="${labels.LoginApp.IsAccessibleWebAgentApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_webagent)">
-                <image src="../img/menu_webAgent.jpg" width="90%"/>  
+                <image src="img/menu_webAgent.jpg" width="90%"/>  
                  <label value="${labels.LoginApp.TextForWebAgentApp}" />               
             </div>
              <div if="${labels.LoginApp.IsAccessibleDialerApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_marcador)">
-                <image src="../img/menu_deskAgent.jpg" width="100%"/> 
+                <image src="img/menu_deskAgent.jpg" width="100%"/> 
                  <label value="${labels.LoginApp.TextForDialerApp}" />                
             </div>
              <div if="${labels.LoginApp.IsAccessibleDashboard}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);"  visible="@load( vm.rolesbean.menu_dashboar)">
-                <image src="../img/menu_Dashboard.png" width="78%"/> 
+                <image src="img/menu_Dashboard.png" width="78%"/> 
                  <label value="${labels.LoginApp.TextForDashboard}" />                
             </div>
 
