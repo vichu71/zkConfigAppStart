@@ -114,7 +114,7 @@ public class LayoutPrincipalVM extends Window {
 	private void addPage(String title, String subTitle, String includeUri, String data) {
 
 //	    	 sess.setAttribute("source",data);
-		String folder = "/zul/";
+		  String folder = "~./zul/";
 		Map<String, NavigationPage> subPageMap = pageMap.get(title);
 		if (subPageMap == null) {
 			subPageMap = new LinkedHashMap<String, NavigationPage>();
