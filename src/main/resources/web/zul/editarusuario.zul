@@ -1,0 +1,187 @@
+<?page id="about" title="Acerca de Atlas" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:h="native">
+	<window id="wUsuarios"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.EditUsuarioVm')"
+		onPositionInfo="@command('onPositionInfo')"
+		onClose="@command('onClose', wnd=wUsuarios)" width="850px"
+		border="normal" mode="highlighted" closable="true"
+		
+		action="show: slideDown;hide: slideUp">
+
+
+
+		<caption label="${labels.title.addUsuario}"
+			iconSclass="fas fa-user" 
+			if="${empty vm.userVmBean.id}"/>
+		<caption label="${labels.title.editUsuario}"
+			iconSclass="fas fa-user" 
+			
+			if="${not empty vm.userVmBean.id}"
+			/>
+
+		<!-- <borderlayout height="700px">
+			
+			<center> -->
+		<div>
+			<grid id="formGrid" hflex="1">
+				<!--<auxhead>
+					<auxheader colspan="2" label="Registration Form" style="font-size:16px" image="/images/picture.png"/>
+					</auxhead>-->
+				<columns visible="false">
+					<column width="120px" />
+					<column width="220px" />
+					<column width="120px" />
+					<column width="220px" />
+					<column width="100px" />
+
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.column.name}"
+							sclass="label-required" />
+						<textbox value="@bind(vm.userVmBean.name)"
+							multiline="false" />
+
+						<label value="${labels.column.desc}" />
+
+						<textbox value="@bind(vm.userVmBean.info)"
+							width="190" />
+					</row>
+					<row>
+						<label value="${labels.column.domain}"
+							sclass="label-required" />
+
+						<combobox id="cmbDom" width="187px"
+							model="@load(vm.dominioname)"
+							selectedItem="@bind(vm.userVmBean.dominio)">
+
+							<comboitem label="@load(each)" />
+
+						</combobox>
+						<label value="${labels.column.subdominio}" />
+
+						<combobox id="cmbSubDom" width="187px"
+							model="@load(vm.subdominioname)"
+							selectedItem="@bind(vm.userVmBean.subdomid)">
+
+							<comboitem label="@load(each)" />
+
+						</combobox>
+
+					</row>
+					<row>
+						<label value="${labels.column.profile}"
+							sclass="label-required" />
+
+						<combobox id="cmbRol" width="187px"
+							model="@load(vm.rolesname)"
+							selectedItem="@bind(vm.userVmBean.profilecode)">
+
+							<comboitem label="@load(each)" />
+
+						</combobox>
+						<label value="${labels.column.team}"
+							sclass="label-required" />
+
+						<combobox id="cmbTeam" width="187px"
+							model="@load(vm.teamname)"
+							selectedItem="@bind(vm.userVmBean.team)"
+							onOpen="@command('refreshTeamModel')">
+
+							<comboitem label="@load(each)" />
+
+						</combobox>
+						
+					<button 
+					iconSclass="z-icon-edit"
+					sclass="btn-warning"
+					
+					onClick="@command('showCreateTeam', usuario=vm.userVmBean)" tooltiptext="New Team"/>
+
+					</row>
+					<row>
+						<label value="${labels.column.login}"
+							sclass="label-required" />
+						<textbox value="@bind(vm.userVmBean.username)"
+							multiline="false" />
+
+						<label value="${labels.column.pass}" />
+
+						<textbox type="password"
+							value="@bind(vm.userVmBean.password)" width="190" />
+					</row>
+
+				</rows>
+				<!-- <rows >
+					<row id="nameRow"> -->
+				<!-- constraint="no empty" -->
+				<!-- User Name <textbox id="nameBox" hflex="1" constraint="no empty"/>
+					</row>
+					<row>
+					Gender:
+					<radiogroup id="genderRadio">
+					<radio label="Male" value="male" image="/images/male.png" checked="true"/>
+					<radio label="Female" value="female" image="/images/female.png"/>
+					</radiogroup>
+					</row>
+					<row >
+					Birthday <datebox id="birthdayBox" hflex="1" constraint="no empty, no today, no future"/>
+					</row>
+					<row  spans="2" align="center"  >
+					<hlayout>
+					<checkbox id="acceptTermBox"/> <label value=" Accept Term of Use (Click for detail)" popup="termDetail, position=end_after"/>
+					</hlayout>
+					</row>
+					<row spans="2" align="right">
+					<hlayout>
+					<label value="Help (Ctrl+h)"/>
+					<button id="resetButton" label="Reset" />
+					<button id="submitButton" label="Submit" disabled="true" />
+					</hlayout>
+					</row>
+					</rows>-->
+			</grid>
+			<!-- <div sclass="row form-group">
+				<div sclass="col-lg-2">
+				<label value="${labels.column.name}"
+				sclass="label-required" />
+				</div>
+				<div sclass="col-lg-10">
+				<textbox hflex="1" value="${arg.usuario.name}"
+				multiline="false" />
+				</div>
+				</div>
+				<div sclass="row form-group">
+				<div sclass="col-lg-12">
+				<label value="${labels.column.desc}" />
+				</div>
+				<div sclass="col-lg-20">
+				<textbox hflex="1" value="${arg.usuario.info}"  />
+				</div>
+				</div> -->
+		</div>
+
+		<!-- </center>
+			<south size="19%">-->
+		<div sclass="row">
+			<div sclass="col">
+				<button sclass="btn-success"
+					label="${labels.action.save}"
+					onClick="@command('saveOrUpdateUser',userBean=vm.userVmBean, wnd=wUsuarios)"
+					visible="@load(empty vm.userVmBean.id)" />
+				<button sclass="btn-success"
+					label="${labels.action.modify}"
+					onClick="@command('saveOrUpdateUser',userBean=vm.userVmBean, wnd=wUsuarios)"
+					visible="@load(not empty vm.userVmBean.id)" />
+				<button 
+					label="${labels.action.cancel}"
+					onClick="@command('onClose', wnd=wUsuarios)" />
+
+			</div>
+		</div>
+		<!-- </south>
+			</borderlayout>-->
+
+	</window>
+</zk>

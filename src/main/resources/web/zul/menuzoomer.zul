@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<?meta http-equiv="Pragma" content="no-cache" ?>
+<?meta http-equiv="Expires" content="-1" ?>
+<?meta name="copyright" content="${labels.global.copy}" ?>
+<?meta name="author" content="victor manuel huecas sanchez de molina" ?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<?page id="menu" title="${labels.label.title}" contentType="text/html;charset=UTF-8"?>
+<?link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous"?>
+<?link rel="stylesheet" type="text/css" href="/css/solid.min.css"?>
+<?link rel="stylesheet" type="text/css" href="/css/bootstrap.min.css"?>
+
+
+
+	<zk xmlns:x="xhtml" xmlns:w="client" xmlns:ca="client/attribute"> 
+	 <div sclass="container-fluid"  apply="org.zkoss.bind.BindComposer"
+         viewModel="@id('headerVm') @init('cestel.sercom.web.vm.MenuVm')" >
+	 
+        <include src="/zul/headermenu.zul"/>
+    </div>
+   <window id="wMenu" border="normal" width="1000px" height="450px" position="center" mode="overlapped" 
+   
+   xmlns:h="native"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.MenuVm')"
+		onClose="@command('onClose')" onOK="@command('menu')">
+    <style src="/css/styles.css"/>
+ 
+    <script src="/js/TweenLite.min.js"/>
+    <script src="/js/TimelineLite.min.js"/>
+    <script src="/js/CSSPlugin.min.js"/>
+    <script src="/js/EasePack.min.js"/>
+    <script src="/js/animations.js"/>
+    <!-- uses defined animations flyInChildren, zoomIn, zoomOut, spinOnce from animations.js -->
+    <label value="${labels.LoginApp.AppDisponible}" />   
+    <div width="900px" height="350px" sclass="gallery" w:onAfterSize="flyInChildren.call(this.$n());">
+       
+            <div if="${labels.LoginApp.IsAccessibleConfigApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_configuracion)">
+                <a href="../layoutprincipal"><image src="../img/menu_configuracion.jpg" width="80%"/></a>
+                 <label value="${labels.LoginApp.TextForConfigApp}" />        
+            </div>
+             <div  if="${labels.LoginApp.IsAccessibleStatsApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);"  visible="@load( vm.rolesbean.menu_estadisticas)">
+                <a href="botonesiconos"> <image src="../img/menu_estadisticas.jpg" width="77%"/> </a>  
+                 <label value="${labels.LoginApp.TextForStatsApp}" />              
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleMonApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_monitorizaciones)">
+               <a href="pruebasComponent">   <image src="../img/menu_Monitorizaciones.jpg" width="80%"/> </a> 
+                 <label value="${labels.LoginApp.TextForMonApp}" />                
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleRecApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_grabacion)">
+                <image src="../img/menu_Grabacion.jpg" width="100%"/>
+                 <label value="${labels.LoginApp.TextForRecApp}" />                 
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleWebCall}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_webCall)">
+                <image src="../img/menu_siavox.jpg" width="100%"/>  
+                 <label value="${labels.LoginApp.TextForWebCall}" />               
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleCCDLoaderApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_ccdloader)">
+                <image src="../img/menu_Dialer.jpg" width="90%"/> 
+                 <label value="${labels.LoginApp.TextForCCDLoaderApp}" />                
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleViApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_viapp)">
+                <image src="../img/menu_Loader.jpg" width="90%"/>  
+ 				<label value="${labels.LoginApp.TextForViApp}" />              
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleWebAgentApp}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_webagent)">
+                <image src="../img/menu_webAgent.jpg" width="90%"/>  
+                 <label value="${labels.LoginApp.TextForWebAgentApp}" />               
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleDialerApp}"  sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);" visible="@load( vm.rolesbean.menu_marcador)">
+                <image src="../img/menu_deskAgent.jpg" width="100%"/> 
+                 <label value="${labels.LoginApp.TextForDialerApp}" />                
+            </div>
+             <div if="${labels.LoginApp.IsAccessibleDashboard}" sclass="imageDiv" w:onBind="jq(this).hover(zoomIn, zoomOut).click(spinOnce);"  visible="@load( vm.rolesbean.menu_dashboar)">
+                <image src="../img/menu_Dashboard.png" width="78%"/> 
+                 <label value="${labels.LoginApp.TextForDashboard}" />                
+            </div>
+
+
+
+
+
+
+       
+    </div>   
+    </window>         
+</zk>

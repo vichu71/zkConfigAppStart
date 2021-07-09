@@ -1,0 +1,73 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<div sclass="row"
+		viewModel="@id('resourceVm') @init('cestel.sercom.web.vm.ResourceVm')">
+		<div sclass="col">
+			<groupbox closable="false">
+				<caption>
+					<label value="@bind(resourceVm.titulo)" />
+				</caption>
+				<div sclass="row">
+					<div sclass="col">
+						<hlayout>
+							<textbox value="@bind(resourceVm.filter)"
+								onOK="@global-command('loadResources')"
+								placeholder="${labels.ph.searchTeam}" hflex="3" />
+							<button iconSclass="z-icon-search"
+								onClick="@global-command('loadResources')" hflex="0.5"/>
+								<label value="" hflex="10" />
+								<label value="Domain:" hflex="0.5" />
+							<label value="${sessionScope.connectedUser.domid.name}" hflex="1" style="color:blue"/>
+						</hlayout>
+						
+					</div>
+				</div>
+				<div sclass="row mt-3">
+					<div sclass="col">
+						<grid mold="paging" pageSize="10"
+							emptyMessage="${labels.message.noTeam}"
+							model="@load(resourceVm.resources) @template('non-editable')"
+							oddRowSclass="z-grid-odd">
+							<columns>
+								<column hflex="1" sort="auto(name)">
+									${labels.column.name}
+								</column>
+								<column hflex="1"
+									sort="auto(info)">
+									${labels.column.desc}
+								</column>
+								
+								<column hflex="1" align="right"></column>
+							</columns>
+
+							<template name="non-editable">
+								<row>
+									<label value="@load(each.name)" />
+									<label value="@load(each.info)" />
+									
+									<div>
+										<button sclass="btn-success"
+											iconSclass="z-icon-pencil"
+											onClick="@command('showEdit', resource=each)" />
+										<button sclass="btn-danger"
+											iconSclass="z-icon-trash"
+											onClick="@command('removeResource', resource=each)" />
+									</div>
+								</row>
+							</template>
+						</grid>
+					</div>
+				</div>
+				
+				<div sclass="row mt-3">
+					<div sclass="col">
+						
+						<button label="${labels.action.add}"
+							onClick="@command('showEdit')" />
+					</div>
+				</div>
+			</groupbox>
+		</div>
+	</div>
+</zk>

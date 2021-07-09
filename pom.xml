@@ -10,7 +10,7 @@
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
-	<packaging>war</packaging>
+	<!--<packaging>war</packaging> -->
 	<groupId>cestel.sercom</groupId>
 	<artifactId>zkConfigAppStart</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
