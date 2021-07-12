@@ -151,7 +151,7 @@ public class DeviceVm {
 
 			map.put("addins", addins);
 
-		wDevices = (Window) Executions.createComponents("/zul/editardevice.zul", null, map);
+		wDevices = (Window) Executions.createComponents("~./zul/editardevice.zul", null, map);
 
 		wDevices.doModal();
 	}

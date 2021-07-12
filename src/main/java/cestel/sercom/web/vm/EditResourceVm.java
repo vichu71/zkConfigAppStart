@@ -45,9 +45,9 @@ import org.zkoss.zul.Rows;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.descriptor.bean.ResClassPropBean;
+import cestel.sercom.web.descriptor.bean.ResOptionsBean;
 import cestel.sercom.web.entity.PropResource;
-import cestel.sercom.web.entity.ResClassProp;
-import cestel.sercom.web.entity.ResOptions;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.entity.User;
 import cestel.sercom.web.exception.CxException;
@@ -82,7 +82,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 	@WireVariable
 	private ConexionSercomManager conserMag;
 
-	private List<ResClassProp> resClassProp = new ArrayList<>();;
+	private List<ResClassPropBean> resClassProp = new ArrayList<>();;
 
 	List<String> optResource = new ArrayList<>();
 
@@ -223,7 +223,7 @@ public class EditResourceVm extends SelectorComposer<Component> {
 
 				resourceVmBean.setSelecteditem(prop.getDefval());
 				valueLabelmap = prop.getResOptions().stream()
-						.collect(Collectors.toMap(ResOptions::getValue, ResOptions::getLabel));
+						.collect(Collectors.toMap(ResOptionsBean::getValue, ResOptionsBean::getLabel));
 
 				createOP();
 			} else if ("BOOLEAN".equals(prop.getType())) {

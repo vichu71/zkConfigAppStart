@@ -91,7 +91,7 @@ public class LayoutPrincipalVM extends Window {
 		addPage("Directory", "Sites", "listadoSites.zul");
 
 		devicesMenu.stream().forEach(dev -> {
-			addPage("Devices", dev, "listadoDevice.zul", dev);
+			addPage("Devices", dev, "listadodevice.zul", dev);
 
 		});
 		addPage("Plugins", "TechPlugins", "listadoTechPlugins.zul");

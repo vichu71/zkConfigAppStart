@@ -45,10 +45,10 @@ import org.zkoss.zul.Rows;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.descriptor.bean.ResClassPropBean;
+import cestel.sercom.web.descriptor.bean.ResOptionsBean;
 import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.entity.PropResource;
-import cestel.sercom.web.entity.ResClassProp;
-import cestel.sercom.web.entity.ResOptions;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.entity.User;
 import cestel.sercom.web.exception.CxException;
@@ -673,7 +673,7 @@ public class EditDeviceVm extends SelectorComposer<Component> {
 //		divcontainer.detach();
 //		divcontainer = null;
 //		resClassProp.clear();
-//		comp.detach();
+		comp.detach();
 		// wResource.detach();
 	}
 

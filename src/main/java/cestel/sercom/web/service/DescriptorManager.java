@@ -17,10 +17,9 @@ import org.w3c.dom.NodeList;
 import org.zkoss.util.resource.Labels;
 import org.xml.sax.SAXException;
 
-import cestel.sercom.web.entity.ResClassProp;
-import cestel.sercom.web.entity.ResOptions;
+import cestel.sercom.web.descriptor.bean.ResClassPropBean;
+import cestel.sercom.web.descriptor.bean.ResOptionsBean;
 import cestel.sercom.web.exception.InvalidXmlDescriptorException;
-import cestel.sercom.web.repository.impl.DescriptorRepositoryImpl;
 import cestel.sercom.web.util.DOMUtils;
 import cestel.sercom.web.util.DirectoryFilter;
 import cestel.sercom.web.util.XmlFileFilter;
@@ -36,8 +35,8 @@ import lombok.extern.slf4j.Slf4j;
 @Component("decriptorMag")
 public class DescriptorManager {
 
-	@Autowired
-	private DescriptorRepositoryImpl<?> descriptorRepository;
+//	@Autowired
+//	private DescriptorRepositoryImpl<?> descriptorRepository;
 
 	private static final String XSD_RESOURCES_FILE = "ResourceDescriptor.xsd";
 
@@ -59,11 +58,11 @@ public class DescriptorManager {
 	 */
 	private Schema xsdSchemas;
 
-	List<ResClassProp> listClassprop = new ArrayList<>();
+	List<ResClassPropBean> listClassprop = new ArrayList<>();
 	
 	List<String>  devicesMenu = new ArrayList<String>();
 
-	public List<ResClassProp> cargaDescriptorResources(String ficheroXml) throws SAXException {
+	public List<ResClassPropBean> cargaDescriptorResources(String ficheroXml) throws SAXException {
 		log.info("Buscando Descriptores XML... ");
 		// Proceso para el xml de System Properties
 
@@ -93,6 +92,25 @@ public class DescriptorManager {
 
 	}
 
+	public List<String> cargaDescriptorDeviceType() throws SAXException {
+		log.info("Buscando cargaDescriptorDeviceType XML... ");
+		// Proceso para el xml de System Properties
+
+		rootDir = new File(xmlHome);
+
+		setupXmlSchemas(XSD_ADDINS_FILE);
+
+		// Proceso todas las carpetas = familias
+		File[] folders = rootDir.listFiles(new DirectoryFilter());
+		// Parseo cada una de ellas
+		for (int i = 0; i < folders.length; i++) {
+			scanFamily(folders[i].getName(), i);
+		}
+		log.info("Finalizada la busqueda de Descriptores XML. ");
+		return devicesMenu;
+
+	}
+	
 	public List<String> cargaDescriptorAddinsMenu() throws SAXException {
 		log.info("Buscando cargaDescriptorAddinsMenu XML... ");
 		// Proceso para el xml de System Properties
@@ -105,14 +123,15 @@ public class DescriptorManager {
 		File[] folders = rootDir.listFiles(new DirectoryFilter());
 		// Parseo cada una de ellas
 		for (int i = 0; i < folders.length; i++) {
-			_ScanFamily(folders[i].getName(), i);
+			scanFamily(folders[i].getName(), i);
 		}
 		log.info("Finalizada la busqueda de Descriptores XML. ");
 		return devicesMenu;
 
 	}
 
-	private void _ScanFamily(String nameFamily, int familyPos) {
+
+	private void scanFamily(String nameFamily, int familyPos) {
 
 		// Obtengo todos los Archivos XML dentro de la carpeta de la Familia
 		File familyFolder = new File(xmlHome + File.separator + nameFamily);
@@ -120,15 +139,15 @@ public class DescriptorManager {
 
 		// proceso cada uno de los archivos XML
 		for (int i = 0; i < xmlFiles.length; i++) {
-			_ParseAddinDescFile(nameFamily, _ExtractFileExt(xmlFiles[i].getName()));
+			parseAddinDescFile(nameFamily, extractFileExt(xmlFiles[i].getName()));
 		}
 
 	}
-    private void _ParseAddinDescFile(String nameFamily, String typeAndVer) {
+    private void parseAddinDescFile(String nameFamily, String typeAndVer) {
         String filename = xmlHome + File.separator + nameFamily + File.separator + typeAndVer + ".xml";
         String type = "";
         String version = "";
-log.info(filename);
+        log.info(filename);
         try {
             // separo el Nombre (Tipo de Addin) de su Version
             String[] nv = splitTypeAndVersion(typeAndVer);
@@ -220,7 +239,7 @@ log.info(filename);
         }
         return retval;
     }
-	 private String _ExtractFileExt(String filename) {
+	 private String extractFileExt(String filename) {
 	        String retval = filename;
 	        int dotPos = filename.indexOf('.');
 	        if ((dotPos > 0) && (dotPos < filename.length())) {
@@ -304,7 +323,7 @@ log.info(filename);
 		NodeList nodeListSon = element.getChildNodes();
 
 		for (int prop = 0; prop < nodeListSon.getLength(); prop++) {
-			ResClassProp resClassProp = new ResClassProp();
+			ResClassPropBean resClassProp = new ResClassPropBean();
 			resClassProp.setClase(attq1);
 			Node nodeson = nodeListSon.item(prop);
 			if (nodeson.getNodeType() == Node.ELEMENT_NODE) {
@@ -350,13 +369,13 @@ log.info(filename);
 						resClassProp.setResOptions(null);
 						if (nodeson1 != null && nodeson1.getNodeName().equals("optionRange")) {
 
-							List<ResOptions> opciones = new ArrayList<ResOptions>();
+							List<ResOptionsBean> opciones = new ArrayList<ResOptionsBean>();
 							NodeList nodeListSon2 = element2.getChildNodes();
 							for (int prop2 = 0; prop2 < nodeListSon2.getLength(); prop2++) {
 								Node nodeson2 = nodeListSon2.item(prop2);
 
 								if (nodeson2.getNodeType() == Node.ELEMENT_NODE) {
-									ResOptions opcion = new ResOptions();
+									ResOptionsBean opcion = new ResOptionsBean();
 									Element element3 = (Element) nodeson2;
 									// System.out.print("options name: " + nodeson2.getNodeName() + " ");
 									// log.info("options name: " + element3.getAttribute("value") + " ");

@@ -148,10 +148,10 @@ public class ResourceVm {
 
 			map.put("resource", resource);
 			map.put("source", source);
-			wResource = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
+			wResource = (Window) Executions.createComponents("~./zul/editarresource.zul", null, map);
 		} else {
 			map.put("source", source);
-			wResource = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
+			wResource = (Window) Executions.createComponents("~./zul/editarresource.zul", null, map);
 
 		}
 		wResource.doModal();

@@ -33,10 +33,10 @@ import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.descriptor.bean.ResOptionsBean;
 import cestel.sercom.web.entity.AddinsDev;
 import cestel.sercom.web.entity.Dns;
 import cestel.sercom.web.entity.Dominio;
-import cestel.sercom.web.entity.ResOptions;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.entity.Roles;
 import cestel.sercom.web.entity.SubDominio;
