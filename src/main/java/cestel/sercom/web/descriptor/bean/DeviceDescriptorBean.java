@@ -9,11 +9,11 @@ import lombok.Data;
  * @since jul 2021
  */
 @Data
-public class DeviceDesciptorBean {
+public class DeviceDescriptorBean {
 	private Long id;
 	private String family;
 	private String version;
 	private String type;
-	private String descripcion;
+	private DescrPlugingBean descripcionAndPlugind;
 
 }

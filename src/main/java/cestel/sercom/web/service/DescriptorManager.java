@@ -17,6 +17,8 @@ import org.w3c.dom.NodeList;
 import org.zkoss.util.resource.Labels;
 import org.xml.sax.SAXException;
 
+import cestel.sercom.web.descriptor.bean.DescrPlugingBean;
+import cestel.sercom.web.descriptor.bean.DeviceDescriptorBean;
 import cestel.sercom.web.descriptor.bean.ResClassPropBean;
 import cestel.sercom.web.descriptor.bean.ResOptionsBean;
 import cestel.sercom.web.exception.InvalidXmlDescriptorException;
@@ -58,9 +60,12 @@ public class DescriptorManager {
 	 */
 	private Schema xsdSchemas;
 
+	private List<DeviceDescriptorBean> deviceDescriptorBeanList = new ArrayList<DeviceDescriptorBean>();
+	private DeviceDescriptorBean deviceDescriptorBean;
+
 	List<ResClassPropBean> listClassprop = new ArrayList<>();
-	
-	List<String>  devicesMenu = new ArrayList<String>();
+
+	List<String> devicesMenu = new ArrayList<String>();
 
 	public List<ResClassPropBean> cargaDescriptorResources(String ficheroXml) throws SAXException {
 		log.info("Buscando Descriptores XML... ");
@@ -92,10 +97,10 @@ public class DescriptorManager {
 
 	}
 
-	public List<String> cargaDescriptorDeviceType() throws SAXException {
+	public List<DeviceDescriptorBean> cargaDescriptorDeviceType(String typeSource) throws SAXException {
 		log.info("Buscando cargaDescriptorDeviceType XML... ");
 		// Proceso para el xml de System Properties
-
+		deviceDescriptorBeanList = new ArrayList<DeviceDescriptorBean>();
 		rootDir = new File(xmlHome);
 
 		setupXmlSchemas(XSD_ADDINS_FILE);
@@ -104,13 +109,13 @@ public class DescriptorManager {
 		File[] folders = rootDir.listFiles(new DirectoryFilter());
 		// Parseo cada una de ellas
 		for (int i = 0; i < folders.length; i++) {
-			scanFamily(folders[i].getName(), i);
+			scanFamily(folders[i].getName(), typeSource);
 		}
 		log.info("Finalizada la busqueda de Descriptores XML. ");
-		return devicesMenu;
+		return deviceDescriptorBeanList;
 
 	}
-	
+
 	public List<String> cargaDescriptorAddinsMenu() throws SAXException {
 		log.info("Buscando cargaDescriptorAddinsMenu XML... ");
 		// Proceso para el xml de System Properties
@@ -123,68 +128,141 @@ public class DescriptorManager {
 		File[] folders = rootDir.listFiles(new DirectoryFilter());
 		// Parseo cada una de ellas
 		for (int i = 0; i < folders.length; i++) {
-			scanFamily(folders[i].getName(), i);
+			scanFamily(folders[i].getName(), null);
 		}
 		log.info("Finalizada la busqueda de Descriptores XML. ");
 		return devicesMenu;
 
 	}
 
-
-	private void scanFamily(String nameFamily, int familyPos) {
+	private void scanFamily(String nameFamily, String typeSource) {
 
 		// Obtengo todos los Archivos XML dentro de la carpeta de la Familia
 		File familyFolder = new File(xmlHome + File.separator + nameFamily);
 		File[] xmlFiles = familyFolder.listFiles(new XmlFileFilter());
 
-		// proceso cada uno de los archivos XML
-		for (int i = 0; i < xmlFiles.length; i++) {
-			parseAddinDescFile(nameFamily, extractFileExt(xmlFiles[i].getName()));
+		// proceso cada uno de los archivos XML para el menu
+		// si el typesource viene a null es para la creacion del menu devices
+		if (typeSource == null) {
+			for (int i = 0; i < xmlFiles.length; i++)
+				parseAddinDescFileMenu(nameFamily, extractFileExt(xmlFiles[i].getName()));
+		} else {
+			// proceso cada uno de los archivos XML para añadir descriptores
+			for (int i = 0; i < xmlFiles.length; i++) {
+				parseAddinDescFile(typeSource, nameFamily, extractFileExt(xmlFiles[i].getName()));
+			}
 		}
-
 	}
-    private void parseAddinDescFile(String nameFamily, String typeAndVer) {
-        String filename = xmlHome + File.separator + nameFamily + File.separator + typeAndVer + ".xml";
-        String type = "";
-        String version = "";
-        log.info(filename);
-        try {
-            // separo el Nombre (Tipo de Addin) de su Version
-            String[] nv = splitTypeAndVersion(typeAndVer);
-            type = nv[0];
-            version = nv[1];
 
-            // Abrimos el Archivo XML y obtenemos el modelo DOM de su contenido
-            File xmlFile = new File(filename);
-           // Element root = (Element) DOMUtils.getXmlFileRoot(xmlFile, xsdSchemas);
-            Document document = DOMUtils.getXmlFileRoot(xmlFile, xsdSchemas);
-            if (document == null) {
-                throw new InvalidXmlDescriptorException("Error while parsing/validating."); //DescriptorsRepoBean.java-deRB03
-            }
-            // Obtenemos el hijo del nodo raiz (addinDescriptor), que especifica el Addin
-            // (hay que buscar el primero de tipo ELEMENT)
-            NodeList nodeList = document.getDocumentElement().getChildNodes();
-			Element root = document.getDocumentElement();
-            Node child = root.getFirstChild();
-            while ((child != null) && (child.getNodeType() != Node.ELEMENT_NODE)) {
-                child = child.getNextSibling();
-                if (child == null) {
-                    throw new InvalidXmlDescriptorException("Addin Descriptor not found (or invalid)."); //DescriptorsRepoBean.java-deRB04
-                }
-            }
-            Element addin = (Element) child;
+	private void parseAddinDescFileMenu(String nameFamily, String typeAndVer) {
+		String filename = xmlHome + File.separator + nameFamily + File.separator + typeAndVer + ".xml";
+		log.info("fichero xml a tratar-> " + filename);
+		try {
 
-            // Segun el tipo de Addin, instanciamos el AddinDescriptor adecuado.
-            String addinTag = addin.getNodeName();
-            // Generacion de claves unicas para los Addins
-          //  String Key = this._getDescriptorKey(nameFamily, type, version);
-            if (("device").equals(addinTag)) {
-            	
-            	if(!devicesMenu.contains(addin.getAttribute("group")))
-            	devicesMenu.add(addin.getAttribute("group"));
-            	
-                // Si es un Descriptor de Device, creamos el objeto correspondiente
-                // y lo almacenamos en su contenedor; excepto que ya exista en el mismo.
+			Element addin = readXMLDescriptores(filename);
+
+			String addinTag = addin.getNodeName();
+			// del tag device de cada documento comprobamos en su atributo group y todos los
+			// distintos lo guardamos para generar el menu de devices
+			if (("device").equals(addinTag)) {
+
+				if (!devicesMenu.contains(addin.getAttribute("group")))
+					devicesMenu.add(addin.getAttribute("group"));
+
+			}
+		} catch (InvalidXmlDescriptorException ixde) {
+			log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ixde.getMessage());
+
+		} catch (Exception ex) {
+			log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ex.getMessage());
+
+		}
+	}
+
+	private Element readXMLDescriptores(String filename) throws InvalidXmlDescriptorException {
+		File xmlFile = new File(filename);
+		// Element root = (Element) DOMUtils.getXmlFileRoot(xmlFile, xsdSchemas);
+		Document document = DOMUtils.getXmlFileRoot(xmlFile, xsdSchemas);
+		if (document == null) {
+			throw new InvalidXmlDescriptorException("Error while parsing/validating."); // DescriptorsRepoBean.java-deRB03
+		}
+		// Obtenemos el hijo del nodo raiz (addinDescriptor), que especifica el Addin
+		// (hay que buscar el primero de tipo ELEMENT)
+		// NodeList nodeList = document.getDocumentElement().getChildNodes();
+		Element root = document.getDocumentElement();
+		Node child = root.getFirstChild();
+		while ((child != null) && (child.getNodeType() != Node.ELEMENT_NODE)) {
+			child = child.getNextSibling();
+			if (child == null) {
+				throw new InvalidXmlDescriptorException("Addin Descriptor not found (or invalid)."); // DescriptorsRepoBean.java-deRB04
+			}
+		}
+		Element addin = (Element) child;
+		return addin;
+	}
+
+	// informacion de los descriptores (los ficheros externos) para la creacion de
+	// los devices
+	private void parseAddinDescFile(String typeSource, String nameFamily, String typeAndVer) {
+		String filename = xmlHome + File.separator + nameFamily + File.separator + typeAndVer + ".xml";
+		String type = "";
+		String version = "";
+		log.info(filename);
+		deviceDescriptorBean = new DeviceDescriptorBean();
+		try {
+
+			// Abrimos el Archivo XML y obtenemos el modelo DOM de su contenido
+			Element addin = readXMLDescriptores(filename);
+			// Segun el tipo de Addin, instanciamos el AddinDescriptor adecuado.
+			String addinTag = addin.getNodeName();
+			// Generacion de claves unicas para los Addins
+			// String Key = this._getDescriptorKey(nameFamily, type, version);
+			if (("device").equals(addinTag)) {
+
+				if (addin.getAttribute("group").equals(typeSource)) {
+					deviceDescriptorBean.setFamily(nameFamily);
+
+					// separo el Nombre (Tipo de Addin) de su Version
+					String[] nv = splitTypeAndVersion(typeAndVer);
+					deviceDescriptorBean.setType(nv[0]);
+					deviceDescriptorBean.setVersion(nv[1]);
+					NodeList child = addin.getChildNodes();
+					String descripcion = "";
+					String plugins = "None";
+
+					for (int i = 0; i < child.getLength(); i++) {
+					//	boolean hayPlugins = false;
+
+						Node it = child.item(i);
+						if (it.getNodeType() == Node.ELEMENT_NODE) {
+
+							if (it.getNodeName().equals("desc")) {
+								descripcion = it.getTextContent();
+							} else if (it.getNodeName().equals("reqPlugin")) {
+								//hayPlugins = true;
+								plugins = plugins.replaceAll("None", "");
+								plugins += plugins + ((Element) it).getAttribute("family") + "."
+										+ ((Element) it).getAttribute("type") + " " + ((Element) it).getAttribute("ver")
+										+ "." + ((Element) it).getAttribute("subVer") + ",";
+							}
+//							if (!hayPlugins) {
+//								hayPlugins = false;
+//								plugins = "None";
+//							}
+							deviceDescriptorBean.setDescripcionAndPlugind(new DescrPlugingBean(descripcion, plugins));
+							// System.out.println(it.getNodeName());
+							// System.out.println(it.getNodeValue());
+							// System.out.println(it.getTextContent());
+							// System.out.println(it.getTextContent());
+						}
+					}
+					// deviceDescriptorBean.setDescripcionAndPlugind(new DescripcionAndPlugind());
+					deviceDescriptorBeanList.add(deviceDescriptorBean);
+				}
+//					devicesMenu.add(addin.getAttribute("group"));
+
+				// Si es un Descriptor de Device, creamos el objeto correspondiente
+				// y lo almacenamos en su contenedor; excepto que ya exista en el mismo.
 //                if (devDescriptors.get(Key) == null) {
 //                    DeviceDescriptor dd = new DeviceDescriptor(nameFamily, type, version, Key, xmlFile.lastModified(), addin);
 //                    devDescriptors.put(Key, dd);
@@ -212,41 +290,48 @@ public class DescriptorManager {
 //                    log.info("Agregado Descriptor de ClientPlugin: " + Key);
 //                    log.debug("Descriptor:" + Key + ", contiene Props = " + cpd.getPropList());
 //                }
-            } else {
-                //throw new InvalidXmlDescriptorException("Unknown descriptor"); //DescriptorsRepoBean.java-deRB05
-            }
-        } catch (InvalidXmlDescriptorException ixde) {
-            log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ixde.getMessage());
-           // _appLog("ERROR", "Descriptors Repository: error in file " + filename + "<br> It's recommended to notify the support personnel.");
-        } catch (Exception ex) {
-            log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ex.getMessage());
-          //  _appLog("ERROR", "Descriptors Repository: error in file " + filename + "<br> It's recommended to notify the support personnel.");
-        }
-    }
+			} else {
+				// throw new InvalidXmlDescriptorException("Unknown descriptor");
+				// //DescriptorsRepoBean.java-deRB05
+			}
+		} catch (InvalidXmlDescriptorException ixde) {
+			log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ixde.getMessage());
+			// _appLog("ERROR", "Descriptors Repository: error in file " + filename + "<br>
+			// It's recommended to notify the support personnel.");
+		} catch (Exception ex) {
+			log.error("DescriptorsRepository: ERROR en archivo " + filename + " - Causa: " + ex.getMessage());
+			// _appLog("ERROR", "Descriptors Repository: error in file " + filename + "<br>
+			// It's recommended to notify the support personnel.");
+		}
+	}
 
-    /** Separa una cadena "Nombre_vv-ss" (donde vv=version, ss=Subversion) en las dos
-     * partes: Name y Version. <br>
-     * La forma de devolver el resultado es un poco rara pero vale: se devuelve un array
-     * de 2 Strings, el primero es "Name" y el segundo "Version" */
-    private String[] splitTypeAndVersion(String typeAndVer) throws InvalidXmlDescriptorException {
-        String[] retval = {"", ""};
-        int usPos = typeAndVer.indexOf('_');
-        if ((usPos > 0) && (usPos < typeAndVer.length() - 5)) {
-            retval[0] = typeAndVer.substring(0, usPos);
-            retval[1] = typeAndVer.substring(usPos + 1);
-        } else {
-            throw new InvalidXmlDescriptorException("The Name of XML file (" + typeAndVer + ") must have the format: \'xxxxx_vv-ss\'."); //DescriptorsRepoBean.java-deRB06
-        }
-        return retval;
-    }
-	 private String extractFileExt(String filename) {
-	        String retval = filename;
-	        int dotPos = filename.indexOf('.');
-	        if ((dotPos > 0) && (dotPos < filename.length())) {
-	            retval = filename.substring(0, dotPos);
-	        }
-	        return retval;
-	    }
+	/**
+	 * Separa una cadena "Nombre_vv-ss" (donde vv=version, ss=Subversion) en las dos
+	 * partes: Name y Version. <br>
+	 * La forma de devolver el resultado es un poco rara pero vale: se devuelve un
+	 * array de 2 Strings, el primero es "Name" y el segundo "Version"
+	 */
+	private String[] splitTypeAndVersion(String typeAndVer) throws InvalidXmlDescriptorException {
+		String[] retval = { "", "" };
+		int usPos = typeAndVer.indexOf('_');
+		if ((usPos > 0) && (usPos < typeAndVer.length() - 5)) {
+			retval[0] = typeAndVer.substring(0, usPos);
+			retval[1] = typeAndVer.substring(usPos + 1);
+		} else {
+			throw new InvalidXmlDescriptorException(
+					"The Name of XML file (" + typeAndVer + ") must have the format: \'xxxxx_vv-ss\'."); // DescriptorsRepoBean.java-deRB06
+		}
+		return retval;
+	}
+
+	private String extractFileExt(String filename) {
+		String retval = filename;
+		int dotPos = filename.indexOf('.');
+		if ((dotPos > 0) && (dotPos < filename.length())) {
+			retval = filename.substring(0, dotPos);
+		}
+		return retval;
+	}
 
 	private void parseResourceDescFile(String FName) {
 		String fullFilename = xmlHome + File.separator + FName;
