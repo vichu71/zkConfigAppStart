@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import cestel.sercom.web.entity.AddinsDev;
+import cestel.sercom.web.entity.AddinsProp;
 import cestel.sercom.web.entity.Resource;
 import cestel.sercom.web.entity.SubDominio;
 import cestel.sercom.web.repository.impl.AddinsDevRepositoryImpl;
@@ -28,6 +29,11 @@ public class AddinsDevManager {
 	
 	public AddinsDev getAddinsDevbyId(Long id) {
 		return addinsDevRepository.findById(id);
+	}
+	
+	public AddinsDev saveOrUpdate(AddinsDev addinsDev) {
+		return addinsDevRepository.save(addinsDev);
+		
 	}
 
 }

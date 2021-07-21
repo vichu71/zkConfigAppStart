@@ -17,12 +17,15 @@ public class ResClassPropBean {
 	private Long id;
 	private String name;
 	private String clase;
+	private String dynamic;
+	private String unique;
 	private String type;
 	private Boolean advanced;
 	private String descripcion;
 	private Long optionrange;
 	private String defval;
 	private String resClassCode;
+	private String plugins;
 
 	private List<ResOptionsBean> resOptions;
 	

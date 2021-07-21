@@ -8,8 +8,6 @@ import java.util.List;
 
 import cestel.sercom.web.util.ComboDto;
 
-//@NoArgsConstructor
-//@AllArgsConstructor
 @Getter
 @Setter
 public class DnsVmBean {

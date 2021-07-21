@@ -14,4 +14,6 @@ public interface AddinsDevRepositoryImpl<T>{
 
 	AddinsDev findById(Long name);
 
+	AddinsDev save(AddinsDev addinsDev);
+
 }

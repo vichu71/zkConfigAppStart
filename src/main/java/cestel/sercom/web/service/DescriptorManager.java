@@ -2,7 +2,10 @@ package cestel.sercom.web.service;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
@@ -21,6 +24,7 @@ import cestel.sercom.web.descriptor.bean.DescrPlugingBean;
 import cestel.sercom.web.descriptor.bean.DeviceDescriptorBean;
 import cestel.sercom.web.descriptor.bean.ResClassPropBean;
 import cestel.sercom.web.descriptor.bean.ResOptionsBean;
+import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.exception.InvalidXmlDescriptorException;
 import cestel.sercom.web.util.DOMUtils;
 import cestel.sercom.web.util.DirectoryFilter;
@@ -67,6 +71,27 @@ public class DescriptorManager {
 
 	List<String> devicesMenu = new ArrayList<String>();
 
+	// Map<String,List<ResClassPropBean>> propDescriptorMap = new HashMap<String,
+	// List<ResClassPropBean>>();
+	List<ResClassPropBean> properties = new ArrayList();
+
+	public List<ResClassPropBean> cargaPropDescriptorDeviceMap(String source, String familia, String nameFileDescriptor)
+			throws SAXException {
+
+		parseAddinDescFile(source, familia, extractFileExt(nameFileDescriptor));
+	
+		return properties;
+
+	}
+
+	public DeviceDescriptorBean cargaplugins()
+			throws SAXException {
+
+		System.out.println("deviceDescriptorBean->" + deviceDescriptorBean);
+		return deviceDescriptorBean;
+
+	}
+
 	public List<ResClassPropBean> cargaDescriptorResources(String ficheroXml) throws SAXException {
 		log.info("Buscando Descriptores XML... ");
 		// Proceso para el xml de System Properties
@@ -86,12 +111,7 @@ public class DescriptorManager {
 		for (int i = 0; i < files.length; i++) {
 			parseResourceDescFile(files[i].getName());
 		}
-		// Proceso todas las carpetas = familias
-//	        File[] folders = rootDir.listFiles(new DirectoryFilter());
-//	        // Parseo cada una de ellas
-//	        for (int i = 0; i < folders.length; i++) {
-//	            _ScanFamily(folders[i].getName(), i);
-//	        }
+
 		log.info("Finalizada la busqueda de Descriptores XML. ");
 		return listClassprop;
 
@@ -147,7 +167,8 @@ public class DescriptorManager {
 			for (int i = 0; i < xmlFiles.length; i++)
 				parseAddinDescFileMenu(nameFamily, extractFileExt(xmlFiles[i].getName()));
 		} else {
-			// proceso cada uno de los archivos XML para añadir descriptores
+			// proceso los archivos XML para añadir descriptores por el typeSource que se le
+			// pasa
 			for (int i = 0; i < xmlFiles.length; i++) {
 				parseAddinDescFile(typeSource, nameFamily, extractFileExt(xmlFiles[i].getName()));
 			}
@@ -205,10 +226,10 @@ public class DescriptorManager {
 	// los devices
 	private void parseAddinDescFile(String typeSource, String nameFamily, String typeAndVer) {
 		String filename = xmlHome + File.separator + nameFamily + File.separator + typeAndVer + ".xml";
-		String type = "";
-		String version = "";
+
 		log.info(filename);
 		deviceDescriptorBean = new DeviceDescriptorBean();
+
 		try {
 
 			// Abrimos el Archivo XML y obtenemos el modelo DOM de su contenido
@@ -220,6 +241,7 @@ public class DescriptorManager {
 			if (("device").equals(addinTag)) {
 
 				if (addin.getAttribute("group").equals(typeSource)) {
+					deviceDescriptorBean.setMedia(addin.getAttribute("media"));
 					deviceDescriptorBean.setFamily(nameFamily);
 
 					// separo el Nombre (Tipo de Addin) de su Version
@@ -228,10 +250,10 @@ public class DescriptorManager {
 					deviceDescriptorBean.setVersion(nv[1]);
 					NodeList child = addin.getChildNodes();
 					String descripcion = "";
-					String plugins = "None";
+					// inicialmente no hay plugins
+					String plugins = "None, ";
 
 					for (int i = 0; i < child.getLength(); i++) {
-					//	boolean hayPlugins = false;
 
 						Node it = child.item(i);
 						if (it.getNodeType() == Node.ELEMENT_NODE) {
@@ -239,24 +261,25 @@ public class DescriptorManager {
 							if (it.getNodeName().equals("desc")) {
 								descripcion = it.getTextContent();
 							} else if (it.getNodeName().equals("reqPlugin")) {
-								//hayPlugins = true;
-								plugins = plugins.replaceAll("None", "");
-								plugins += plugins + ((Element) it).getAttribute("family") + "."
+								plugins = plugins.replaceAll("None,", "");
+								plugins += ((Element) it).getAttribute("family") + "."
 										+ ((Element) it).getAttribute("type") + " " + ((Element) it).getAttribute("ver")
-										+ "." + ((Element) it).getAttribute("subVer") + ",";
+										+ "." + ((Element) it).getAttribute("subVer") + ", ";
+
+							} else if (it.getNodeName().equals("properties")) {
+
+								System.out.println("estoy en las propiedades");
+								properties = leerPropertiesXML("na", (Element) it);
+								// propDescriptorMap.put(filename, properties);
 							}
-//							if (!hayPlugins) {
-//								hayPlugins = false;
-//								plugins = "None";
-//							}
-							deviceDescriptorBean.setDescripcionAndPlugind(new DescrPlugingBean(descripcion, plugins));
-							// System.out.println(it.getNodeName());
-							// System.out.println(it.getNodeValue());
-							// System.out.println(it.getTextContent());
-							// System.out.println(it.getTextContent());
 						}
+
 					}
-					// deviceDescriptorBean.setDescripcionAndPlugind(new DescripcionAndPlugind());
+
+					// esto es para quitar el ", " del ultimo plugin o del None en el caso de no
+					// haber
+					plugins = plugins.substring(0, plugins.length() - 2);
+					deviceDescriptorBean.setDescripcionAndPlugind(new DescrPlugingBean(descripcion, plugins));
 					deviceDescriptorBeanList.add(deviceDescriptorBean);
 				}
 //					devicesMenu.add(addin.getAttribute("group"));
@@ -405,8 +428,13 @@ public class DescriptorManager {
 		log.info("Elemento:" + nodo.getNodeName());
 		Element element = (Element) nodo;
 
-		NodeList nodeListSon = element.getChildNodes();
+		leerPropertiesXML(attq1, element);
 
+	}
+
+	private List<ResClassPropBean> leerPropertiesXML(String attq1, Element element) {
+		NodeList nodeListSon = element.getChildNodes();
+		listClassprop.clear();
 		for (int prop = 0; prop < nodeListSon.getLength(); prop++) {
 			ResClassPropBean resClassProp = new ResClassPropBean();
 			resClassProp.setClase(attq1);
@@ -422,6 +450,16 @@ public class DescriptorManager {
 				String type = element1.getAttributeNode("type").getNodeValue();
 				if (type != null)
 					resClassProp.setType(type);
+				try {
+					String dynamic = element1.getAttributeNode("dynamic").getNodeValue();
+					if (dynamic != null)
+						resClassProp.setDynamic(dynamic);	
+					String unique = element1.getAttributeNode("unique").getNodeValue();
+					if (unique != null)
+						resClassProp.setUnique(unique);
+				}catch (NullPointerException e) {}
+				
+				
 				// System.out.print(element1.getAttributeNode("type").getNodeValue() + " ");
 				if (element1.getAttributeNode("advanced") != null) {
 					String avanced = element1.getAttributeNode("advanced").getNodeValue();
@@ -481,12 +519,12 @@ public class DescriptorManager {
 				}
 				// descriptorRepository.save(resClassProp);
 				listClassprop.add(resClassProp);
-				// sess.setAttribute("resClassProp", resClassProp);
 
 			}
 
 		}
-
+		listClassprop.stream().forEach(p -> System.out.println("laravel-> " + p.getType()));
+		return listClassprop;
 	}
 
 	/**
@@ -504,6 +542,33 @@ public class DescriptorManager {
 		// xsdResources = sf.newSchema(new File(xsdHome + File.separator +
 		// XSD_RESOURCES_FILE));
 //        xsdSysProps = sf.newSchema(new File(xsdHome + File.separator + XSD_SYSPROPS_FILE));
+	}
+
+	public Map<String, String> cargaDescriptorPropDevice(Addins addins, String source) throws SAXException {
+		log.info("Buscando cargaDescriptorPropDevice XML... ");
+		Map<String, String> propAddins = new HashMap<>();
+
+		String filename = xmlHome + File.separator + addins.getFamily() + File.separator + addins.getType() + "_"
+				+ addins.getVersion() + ".xml";
+		rootDir = new File(filename);
+
+		setupXmlSchemas(XSD_ADDINS_FILE);
+
+		// File[] files = rootDir.listFiles(new XmlFileMaskFilter(filename));
+
+		// parseAddinsDescFile(filename);
+
+		parseAddinDescFile(source, addins.getFamily(), addins.getType() + "_" + addins.getVersion());
+
+		propAddins = listClassprop.stream()
+				.collect(Collectors.toMap(ResClassPropBean::getName, ResClassPropBean::getDefval));
+		return propAddins;
+//		return null;
+	}
+
+	private void parsePropertiesAddins(Document document) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

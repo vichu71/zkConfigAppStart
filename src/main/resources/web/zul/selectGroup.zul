@@ -1,0 +1,47 @@
+<?page id="select" title="Seleccionar grupo" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:h="native">
+	<window id="wgroup"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.SelectGroupVm')"
+		onPositionInfo="@command('onPositionInfo')"
+		onClose="@command('onClose', wnd=wUsuarios)" width="850px"
+		border="normal" mode="highlighted" closable="true"
+		
+		action="show: slideDown;hide: slideUp">
+
+
+
+		<caption label="Seleccionar Grupo"
+			iconSclass="fas fa-user" />
+		
+	<label value="${labels.column.device}"
+							sclass="label-required" />
+
+						<combobox id="cmbDns" width="187px"
+							model="@load(vm.dnsVmBean.listDevice)"
+							selectedItem="@bind(vm.dnsVmBean.deviceComboSelecionado)"
+							>
+							<template name="model" var="p">
+								<comboitem value="@load(p.value)" label="@load(p.label)" />
+							</template>
+
+						</combobox>
+		
+				
+		<div sclass="row">
+			<div sclass="col">
+				<button sclass="btn-success"
+					label="${labels.action.save}"
+					onClick="@command('selectGroup', wnd=wgroup, dnsBean=vm.dnsVmBean)"
+					/>
+				
+				<button 
+					label="${labels.action.cancel}"
+					onClick="@command('onClose', wnd=wgroup)" />
+
+			</div>
+		</div>
+		
+
+	</window>
+</zk>

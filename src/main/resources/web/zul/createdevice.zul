@@ -22,19 +22,22 @@
 				<columns visible="false">
 					<column width="120px" />
 					<column width="220px" />
-					<column width="50px" />
-					<column width="120px" />
+					<column width="150px" />
 					<column width="220px" />
+					<column width="75px" />
+					<column width="50px" />
 				</columns>
 				<rows>
 					<row>
 						<label value="${labels.column.name}"
 							sclass="label-required" />
-						<textbox id="name" />
-						<checkbox checked="@load(status)"/>
-						<label value="${labels.column.desc}" />
-
-						<textbox id="createDN" width="190" />
+						<textbox id="name" value="@bind(vm.name)"/>
+						
+						<label value="${labels.title.addDns}" />
+						<textbox id="createDN" width="190" value="@bind(vm.name)"/>
+						<checkbox id="checkDN" onClick="@command('onSelect')"  mold="switch" checked="true"/>
+						<label  tooltiptext="If checket,it automatically creates a DN for this device" sclass="fa fa-info fa-lg azul"/>
+						
 					</row>
 				</rows>
 
@@ -61,7 +64,7 @@
 							</listhead>
 							<template name="model" >
 								<listitem
-									onClick="@command('addCheckMulti', device=each)" >
+									onClick="@command('deviceSelect', device=each)" >
 									<listcell height="30px" />
 									<listcell label="@load(each.family)" />
 									<listcell
@@ -83,7 +86,7 @@
 		<div sclass="row">
 			<div sclass="col">
 				<button sclass="btn-success"
-					label="${labels.action.save}" id="onSave" />
+					label="${labels.action.save}" onClick="@command('onSave', wnd=wDevice)"  />
 
 				<button 
 					label="${labels.action.cancel}"

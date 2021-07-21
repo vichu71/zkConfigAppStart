@@ -49,7 +49,7 @@
 
 							</listhead>
 							<template name="model">
-								<listitem context="editPopup"
+								<listitem context="editPopupDns"
 									onClick="@command('addCheckMulti', dns=each)">
 									<listcell height="30px" />
 									<listcell label="@load(each.name)" />
@@ -84,11 +84,11 @@
 				</div>
 			</groupbox>
 		</div>
-		<menupopup id="editPopup">
+		<menupopup id="editPopupDns">
 			<menuitem iconSclass="z-icon-pencil" label="Modificar"
 				onClick="@command('showEditMulti')" />
 			<menuitem iconSclass="z-icon-trash-o" label="Eliminar"
-				onClick="@command('removeDnsMulti')" />
+				onClick="@command('removeMulti')" />
 		</menupopup>
 	</div>
 

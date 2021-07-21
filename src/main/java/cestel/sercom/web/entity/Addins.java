@@ -4,6 +4,11 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import lombok.Data;
 
 /**
@@ -42,9 +47,21 @@ public class Addins {
 //    joinColumns=@JoinColumn(name="dnid"),
 //    inverseJoinColumns=@JoinColumn(name="devid"))
 //    private AddinsDev addinsDev;
-    @OneToOne (fetch=FetchType.EAGER)
+    
+    @OneToOne (fetch=FetchType.EAGER, cascade = { CascadeType.REMOVE }, orphanRemoval = true)
     @JoinColumn(name = "id", nullable = false)
     private AddinsDev addinsDev;
+    
+    @OneToOne (fetch=FetchType.EAGER, cascade = { CascadeType.REMOVE }, orphanRemoval = true)
+    @JoinColumn(name = "id", nullable = false)
+    private AddinsPlg addinsPlg;
+    
+    
+    @OneToMany(mappedBy = "addins", fetch = FetchType.EAGER, cascade = { CascadeType.REMOVE }, orphanRemoval = true)
+	 @LazyCollection(LazyCollectionOption.FALSE)
+   @Fetch(value = FetchMode.SUBSELECT)
+	
+    private List<AddinsProp> addinsPropList;
     
    
  

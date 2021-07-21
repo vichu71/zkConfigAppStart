@@ -86,8 +86,8 @@ public class EditDnsVm {
 	public void init() {
 //		recupero el usuario de sesion
 		userLoginSession = (User) session.getAttribute("connectedUser");
-		
-		//recupero los parametros de la vista padre que envia por el map
+
+		// recupero los parametros de la vista padre que envia por el map
 		this.dnsCheck = (List<Dns>) execution.getArg().get("dnsCheck");
 		mapDnsVm();
 
@@ -96,18 +96,14 @@ public class EditDnsVm {
 	}
 
 	@Command
-	@NotifyChange("teamname")
-	public void showCreateTeam(@BindingParam("usuario") UserVmBean usuario) {
+//	@NotifyChange("devicesName")
+	public void showCreateDns() {
 		Window window = null;
-		final HashMap<String, Object> map = new HashMap<String, Object>();
-		if (usuario != null) {
-			map.put("usuario", usuario);
-			map.put("source", "T");
-			window = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
-		}
+
+		window = (Window) Executions.createComponents("~./zul/selectGroup.zul", null, null);
 
 		window.doModal();
-		// UIUtils.show("editarusuario", null, null);
+
 	}
 
 	@Command
@@ -119,18 +115,19 @@ public class EditDnsVm {
 	public void saveOrUpdateDns(Event e, @BindingParam("dnsBean") DnsVmBean dnsBean, @BindingParam("wnd") Window wDns)
 			throws InterruptedException {
 		Dns dns = mapDnsBeanToDns(dnsBean);
-		
-		if(dnsCheck!=null) {
-			dnsCheck.stream().forEach(dn->{
-				
+
+		if (dnsCheck != null) {
+			dnsCheck.stream().forEach(dn -> {
+
 				dns.setId(dn.getId());
 				dns.setName(dn.getName());
-				dnsMag.saveOrUpdate(dns);});
-		}else {
+				dnsMag.saveOrUpdate(dns);
+			});
+		} else {
 			dnsMag.saveOrUpdate(dns);
-			
+
 		}
-		//actualizo las variables de la vista padre.
+		// actualizo las variables de la vista padre.
 		BindUtils.postGlobalCommand(null, null, "loadDns", null);
 		BindUtils.postGlobalCommand(null, null, "loadDnsCheck", null);
 		wDns.detach();
@@ -181,20 +178,21 @@ public class EditDnsVm {
 		for (Map.Entry<String, String> entry : valueLabelmap.entrySet()) {
 			dnsVmBean.getListDevice().add(new ComboDto(entry.getKey(), entry.getValue()));
 		}
-		
 
 		this.dns = (Dns) execution.getArg().get("dns");
-		
-		
-		
+
 		if (dns != null) {
 			dnsVmBean.setId(dns.getId());
 			dnsVmBean.setName(dns.getName());
-			dnsVmBean.setMediaComboSelecionado(dnsVmBean.getListMedia().stream().filter(f->f.getValue().equals(dns.getMediacode())).findFirst().orElseThrow(null));
-			dnsVmBean.setTypeComboSelecionado(dnsVmBean.getListType().stream().filter(f->f.getValue().equals(dns.getDntypecode())).findFirst().orElseThrow(null));
+			dnsVmBean.setMediaComboSelecionado(dnsVmBean.getListMedia().stream()
+					.filter(f -> f.getValue().equals(dns.getMediacode())).findFirst().orElseThrow(null));
+			dnsVmBean.setTypeComboSelecionado(dnsVmBean.getListType().stream()
+					.filter(f -> f.getValue().equals(dns.getDntypecode())).findFirst().orElseThrow(null));
 			dnsVmBean.setPeer(dns.getRemotepeer());
-			
-			dnsVmBean.setDeviceComboSelecionado(dnsVmBean.getListDevice().stream().filter(f->f.getLabel().equals(dns.getAddinsDev().getName())).findFirst().orElseThrow(null));
+			if (dns.getAddinsDev() != null)
+				dnsVmBean.setDeviceComboSelecionado(dnsVmBean.getListDevice().stream()
+						.filter(f -> f.getLabel().equals(dns.getAddinsDev().getName()))
+						.filter(f -> f.getLabel().equals(dns.getAddinsDev().getName())).findFirst().orElseThrow(null));
 		}
 	}
 
@@ -213,12 +211,16 @@ public class EditDnsVm {
 	@Command
 	@NotifyChange("*")
 	public void refreshDeviceModel() {
+		valueLabelmap.clear();
+		dnsVmBean.getListDevice().clear();
+		devicesList.clear();
 		devicesList = addinsDevMag.getAll();
-		this.devicesName = devicesList.stream().map(AddinsDev::getName).collect(Collectors.toList());
+		valueLabelmap = devicesList.stream().collect(Collectors.toMap(AddinsDev::getIdString, AddinsDev::getName));
+		dnsVmBean.getListDevice().add(new ComboDto("0", "-none-"));
+		for (Map.Entry<String, String> entry : valueLabelmap.entrySet()) {
+			dnsVmBean.getListDevice().add(new ComboDto(entry.getKey(), entry.getValue()));
+		}
 
-		devicesName.add(0, "-none-");
-
-		// cmbTeam.setSelectedIndex(teamname.size()-1);
 	}
 
 }

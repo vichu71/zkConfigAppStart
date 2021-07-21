@@ -54,7 +54,7 @@
 
 							</listhead>
 							<template name="model">
-								<listitem context="editPopup"
+								<listitem context="editPopupDevice"
 									onClick="@command('addCheckMulti', device=each)">
 									<listcell height="30px" />
 									<listcell
@@ -65,9 +65,9 @@
 										label="@load(each.family)" />
 									<listcell label="@load(each.type)" />
 									<listcell
-										label="" />
-									<listcell
 										label="@load(each.version)" />
+									<listcell
+										label="" />
 									<listcell height="30px">
 										<div height="30px">
 											<button sclass="btn-success"
@@ -86,16 +86,16 @@
 				<div sclass="row mt-3">
 					<div>
 						<button label="${labels.action.add}"
-							onClick="@command('showEdit')" />
+							onClick="@command('showAdd')" />
 					</div>
 				</div>
 			</groupbox>
 		</div>
-		<menupopup id="editPopup">
-			<menuitem iconSclass="z-icon-pencil" label="Modificar"
-				onClick="@command('showEditMulti')" />
+		<menupopup id="editPopupDevice">
+			<!-- <menuitem iconSclass="z-icon-pencil" label="Modificar"
+				onClick="@command('showEditMulti')" />-->
 			<menuitem iconSclass="z-icon-trash-o" label="Eliminar"
-				onClick="@command('removeDnsMulti')" />
+				onClick="@command('removeMulti')" /> 
 		</menupopup>
 	</div>
 </zk>

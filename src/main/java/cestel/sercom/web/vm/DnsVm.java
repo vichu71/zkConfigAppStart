@@ -21,6 +21,7 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
+import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.entity.Dns;
 import cestel.sercom.web.service.DnsManager;
 import cestel.sercom.web.util.ApplicationUtils;
@@ -88,32 +89,49 @@ public class DnsVm {
 	@NotifyChange("dns")
 	public void removeDns(@BindingParam("dns") Dns dns) {
 
+		deleteRegistro(dns);
+
+	}
+	private void deleteRegistro(Dns dns) {
 		try {
 			// confirmation dialog
+		
 			EventListener<Messagebox.ClickEvent> clickListener = new EventListener<Messagebox.ClickEvent>() {
 				public void onEvent(Messagebox.ClickEvent event) throws Exception {
 					if (Messagebox.Button.YES.equals(event.getButton())) {
 
 						// store ids of the new edited list
+						if(dns!=null) {
+							
+							dnsMag.delete(dns);
 
-						dnsMag.delete(dns);
-
+						// el envio del xml pa luego
+						// resourceXml.deleteMsg(addins);
 						BindUtils.postGlobalCommand(null, null, "loadDns", null);
 
 						// show notification
 						ApplicationUtils.showInfo("message.registroEliminado");
-
+						}else {
+							
+							for(Dns dns:dnsCheck) {
+								dnsMag.delete(dns);
+								
+							}
+							BindUtils.postGlobalCommand(null, null, "loadDns", null);
+							
+						}
 					}
 				}
 			};
 			Messagebox.show(Labels.getLabel("message.deleteConfirmation"), "Confirmation",
 					new Messagebox.Button[] { Messagebox.Button.YES, Messagebox.Button.NO }, Messagebox.QUESTION,
 					clickListener);
+			
+			
 		} catch (Exception e) {
 			log.error("Error when saving user list : " + e.getMessage());
 			e.printStackTrace();
 		}
-
 	}
 
 	@Command
@@ -161,6 +179,10 @@ public class DnsVm {
 		if (e.isChecked())
 			dnsCheck.addAll(dns);
 
+	}
+	@Command
+	public void removeMulti() {
+		deleteRegistro(null);
 	}
 
 }

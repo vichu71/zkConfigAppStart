@@ -20,7 +20,6 @@ import lombok.Data;
 @Table(name = "resources")
 public class Resource {
 
-	// region Properties
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

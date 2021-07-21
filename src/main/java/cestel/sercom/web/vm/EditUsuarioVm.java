@@ -116,7 +116,7 @@ public class EditUsuarioVm  extends SelectorComposer<Component> {
 		if (usuario != null) {
 			map.put("usuario", usuario);
 			map.put("source", "T");
-			window = (Window) Executions.createComponents("/zul/editarresource.zul", null, map);
+			window = (Window) Executions.createComponents("~./zul/editarresource.zul", null, map);
 		} 
 
 		window.doModal();

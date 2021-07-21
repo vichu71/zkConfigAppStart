@@ -96,53 +96,9 @@
 
 
 				</rows>
-				<!-- <rows >
-					<row id="nameRow"> -->
-				<!-- constraint="no empty" -->
-				<!-- User Name <textbox id="nameBox" hflex="1" constraint="no empty"/>
-					</row>
-					<row>
-					Gender:
-					<radiogroup id="genderRadio">
-					<radio label="Male" value="male" image="/images/male.png" checked="true"/>
-					<radio label="Female" value="female" image="/images/female.png"/>
-					</radiogroup>
-					</row>
-					<row >
-					Birthday <datebox id="birthdayBox" hflex="1" constraint="no empty, no today, no future"/>
-					</row>
-					<row  spans="2" align="center"  >
-					<hlayout>
-					<checkbox id="acceptTermBox"/> <label value=" Accept Term of Use (Click for detail)" popup="termDetail, position=end_after"/>
-					</hlayout>
-					</row>
-					<row spans="2" align="right">
-					<hlayout>
-					<label value="Help (Ctrl+h)"/>
-					<button id="resetButton" label="Reset" />
-					<button id="submitButton" label="Submit" disabled="true" />
-					</hlayout>
-					</row>
-					</rows>-->
+			
 			</grid>
-			<!-- <div sclass="row form-group">
-				<div sclass="col-lg-2">
-				<label value="${labels.column.name}"
-				sclass="label-required" />
-				</div>
-				<div sclass="col-lg-10">
-				<textbox hflex="1" value="${arg.usuario.name}"
-				multiline="false" />
-				</div>
-				</div>
-				<div sclass="row form-group">
-				<div sclass="col-lg-12">
-				<label value="${labels.column.desc}" />
-				</div>
-				<div sclass="col-lg-20">
-				<textbox hflex="1" value="${arg.usuario.info}"  />
-				</div>
-				</div> -->
+			
 		</div>
 
 		<!-- </center>
