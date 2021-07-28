@@ -2,7 +2,7 @@
 <zk>
 
 	<div
-		viewModel="@id('deviceVm') @init('cestel.sercom.web.vm.DeviceVm')">
+		viewModel="@id('pluginVm') @init('cestel.sercom.web.vm.PluginsVm')">
 		<div>
 			<groupbox closable="false">
 				<caption>
@@ -11,11 +11,11 @@
 				<div>
 					<div>
 						<hlayout>
-							<textbox value="@bind(deviceVm.filter)"
-								onOK="@global-command('loadDevice')"
+							<textbox value="@bind(pluginVm.filter)"
+								onOK="@global-command('loadPlugin')"
 								placeholder="${labels.ph.searchDns}" hflex="3" />
 							<button iconSclass="z-icon-search"
-								onClick="@global-command('loadDevice')" hflex="0.5" />
+								onClick="@global-command('loadPlugin')" hflex="0.5" />
 							<label value="" hflex="10" />
 							<label value="Domain:" hflex="0.5" />
 							<label
@@ -27,55 +27,44 @@
 				</div>
 				<div sclass="mt-3">
 					<div>
-						<listbox model="@load(deviceVm.devices)"
+						<listbox model="@load(pluginVm.plugins)"
 							checkmark="true" mold="paging" pageSize="10" multiple="true"
 							onCheckSelectAll="@command('onSelectAll')">
 							<listhead>
 								<listheader width="50px" />
-								<listheader
-									label="${labels.column.name}" align="left" sort="auto(addinsDev.name)" />
-								<listheader
-									label="${labels.column.media}" align="left"
-									sort="auto(addinsDev.mediacode)" />
+
 								<listheader
 									label="${labels.column.family}" align="left"
 									sort="auto(family)" />
 								<listheader
-									label="${labels.column.type}" align="left"
-									sort="auto(type)" />
+									label="${labels.column.type}" align="left" sort="auto(type)" />
 								<listheader
 									label="${labels.column.version}" align="left"
 									sort="auto(version)" />
-								<listheader
-									label="${labels.column.dn}" align="left"
-									/>
+
 								<listheader align="left" />
 
 
 							</listhead>
 							<template name="model">
-								<listitem context="editPopupDevice"
-									onClick="@command('addCheckMulti', device=each)">
+								<listitem context="editPopupPlugin"
+									onClick="@command('addCheckMulti', plugin=each)">
 									<listcell height="30px" />
-									<listcell
-										label="@load(each.addinsDev.name)" />
-									<listcell
-										label="@load(each.addinsDev.media)" />
+									
 									<listcell
 										label="@load(each.family)" />
 									<listcell label="@load(each.type)" />
 									<listcell
 										label="@load(each.version)" />
-									<listcell
-										label="" />
+									
 									<listcell height="30px">
 										<div height="30px">
 											<button sclass="btn-success"
 												iconSclass="z-icon-pencil"
-												onClick="@command('showEdit', device=each)" />
+												onClick="@command('showEdit', plugin=each)" />
 											<button sclass="btn-danger"
 												iconSclass="z-icon-trash"
-												onClick="@command('removeDevice', device=each)" />
+												onClick="@command('removePlugin', plugin=each)" />
 										</div>
 									</listcell>
 								</listitem>
@@ -91,11 +80,11 @@
 				</div>
 			</groupbox>
 		</div>
-		<menupopup id="editPopupDevice">
+		<menupopup id="editPopupPlugin">
 			<!-- <menuitem iconSclass="z-icon-pencil" label="Modificar"
 				onClick="@command('showEditMulti')" />-->
 			<menuitem iconSclass="z-icon-trash-o" label="Eliminar"
-				onClick="@command('removeMulti')" /> 
+				onClick="@command('removeMulti')" />
 		</menupopup>
 	</div>
 </zk>

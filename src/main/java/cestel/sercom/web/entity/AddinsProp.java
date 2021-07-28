@@ -3,12 +3,16 @@ package cestel.sercom.web.entity;
 import javax.persistence.*;
 
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author vmhuecas
  * @since jul 2021
  */
-@Data
+//@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "addins_prop")
 public class AddinsProp {
@@ -26,6 +30,11 @@ public class AddinsProp {
 	
 	@Column
 	private String value;
+
+	public AddinsProp() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 	
 
 

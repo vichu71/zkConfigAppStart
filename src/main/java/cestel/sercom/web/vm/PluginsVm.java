@@ -42,11 +42,11 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class DeviceVm {
+public class PluginsVm {
 
-	private List<Addins> devices;
+	private List<Addins> plugins;
 
-	private List<Addins> devicesCheck;
+	private List<Addins> pluginsCheck;
 
 	// initialize filter to null (no value)
 	private String filter;
@@ -57,7 +57,7 @@ public class DeviceVm {
 	private ResourceXMLImpl resourceXml;
 
 	Grid grid1;
-	Window wDevices;
+	Window wPlugins;
 	Textbox data = new Textbox();
 
 	//Session sess = Sessions.getCurrent();
@@ -69,8 +69,8 @@ public class DeviceVm {
 	@Init
 	public void init(@ContextParam(ContextType.COMPONENT) Component comp) {
 
-		log.info("Init DeviceVM");
-		devicesCheck = new ArrayList<Addins>();
+		log.info("Init PluginsVM");
+		pluginsCheck = new ArrayList<Addins>();
 		// se recupera el dato del textbox que es el que nos indica a que descriptor
 		// vamos
 		data = (Textbox) comp.getNextSibling();
@@ -79,25 +79,25 @@ public class DeviceVm {
 			titulo = Labels.getLabel("title.header." + source);
 		}
 		// load instructor list from the database
-		loadDevices();
+		loadPlugin();
 
 		// initialize filter to null (no value)
 		setFilter(null);
 	}
 
 	/**
-	 * Get the Devices list from the database
+	 * Get the plugins list from the database
 	 *
-	 * @return A list of Devices elements
+	 * @return A list of Plugins elements
 	 * @see Addins
 	 */
-	public List<Addins> getDevicesListFromDatabase() {
+	public List<Addins> getPluginsListFromDatabase() {
 
 		return getFilter() != null
-				? addinsMag.getFiltered(getFilter()).stream().filter(f -> f.getAddinsDev().getDevgroup().equals(source))
+				? addinsMag.getFiltered(getFilter()).stream().filter(f -> f.getAddinsPlg().getPclass().equals(source))
 						.collect(Collectors.toList())
-				: addinsMag.getAll().stream().filter(f -> f.getAddinsDev() != null)
-						.filter(f -> f.getAddinsDev().getDevgroup().equals(source)).collect(Collectors.toList());
+				: addinsMag.getAll().stream().filter(f -> f.getAddinsPlg() != null)
+						.filter(f -> f.getAddinsPlg().getPclass().equals(source)).collect(Collectors.toList());
 	}
 
 	/**
@@ -106,16 +106,16 @@ public class DeviceVm {
 	 * @see Instructor
 	 */
 	@GlobalCommand
-	@NotifyChange("devices")
-	public void loadDevices() {
+	@NotifyChange("plugins")
+	public void loadPlugin() {
 		log.info("source-> " + source);
-		this.devices = getDevicesListFromDatabase();
-		System.out.println(devices);
+		this.plugins = getPluginsListFromDatabase();
+		System.out.println(plugins);
 	}
 
 	@Command
-	@NotifyChange("devices")
-	public void removeDevice(@BindingParam("device") Addins addins) {
+	@NotifyChange("plugins")
+	public void removePlugin(@BindingParam("plugin") Addins addins) {
 
 		deleteRegistro(addins);
 
@@ -136,17 +136,17 @@ public class DeviceVm {
 
 							// el envio del xml pa luego
 							// resourceXml.deleteMsg(addins);
-							BindUtils.postGlobalCommand(null, null, "loadDevices", null);
+							BindUtils.postGlobalCommand(null, null, "loadPlugin", null);
 
 							// show notification
 							ApplicationUtils.showInfo("message.registroEliminado");
 						} else {
 
-							for (Addins addins : devicesCheck) {
+							for (Addins addins : pluginsCheck) {
 								addinsMag.delete(addins);
 
 							}
-							BindUtils.postGlobalCommand(null, null, "loadDevices", null);
+							BindUtils.postGlobalCommand(null, null, "loadPlugin", null);
 
 						}
 					}
@@ -163,22 +163,22 @@ public class DeviceVm {
 	}
 
 	@Command
-	@NotifyChange("devices")
+	@NotifyChange("plugins")
 	public void showAdd(@BindingParam("addins") Addins addins) {
 
 		final HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("source", source);
-		if (devices != null)
+		if (plugins != null)
 
 			map.put("addins", addins);
 
-		wDevices = (Window) Executions.createComponents("~./zul/createdevice.zul", null, map);
+		wPlugins = (Window) Executions.createComponents("~./zul/createplugin.zul", null, map);
 
-		wDevices.doModal();
+		wPlugins.doModal();
 	}
 
 	@Command
-	@NotifyChange("devices")
+	@NotifyChange("plugins")
 	public void showEditMulti() {
 
 		showEdit(null);
@@ -186,28 +186,28 @@ public class DeviceVm {
 	}
 
 	@Command
-	@NotifyChange("devices")
-	public void showEdit(@BindingParam("device") Addins addins) {
+	@NotifyChange("plugins")
+	public void showEdit(@BindingParam("plugin") Addins addins) {
 
 		final HashMap<String, Object> map = new HashMap<String, Object>();
 		map.put("source", source);
 
 		map.put("addins", addins);
 		
-		map.put("addinsList", devicesCheck);
+		map.put("addinsList", pluginsCheck);
 
-		wDevices = (Window) Executions.createComponents("~./zul/editardevice.zul", null, map);
+		wPlugins = (Window) Executions.createComponents("~./zul/editarplugin.zul", null, map);
 
-		wDevices.doModal();
+		wPlugins.doModal();
 	}
 
 	@Command
-	public void addCheckMulti(@BindingParam("device") Addins addins) {
+	public void addCheckMulti(@BindingParam("plugin") Addins addins) {
 
-		if (devicesCheck.contains(addins))
-			devicesCheck.remove(addins);
+		if (pluginsCheck.contains(addins))
+			pluginsCheck.remove(addins);
 		else
-			devicesCheck.add(addins);
+			pluginsCheck.add(addins);
 	}
 
 	@Command
@@ -216,16 +216,16 @@ public class DeviceVm {
 		System.out.println(e.getName());
 
 		if (e.isChecked())
-			devicesCheck.addAll(devices);
+			pluginsCheck.addAll(plugins);
 		else
-			devicesCheck.clear();
+			pluginsCheck.clear();
 	}
 
 	@Command
 	public void removeMulti() {
 
-		System.out.println(devicesCheck.size());
-		// devicesCheck.stream().forEach(j->System.out.println(j.getId()));
+		System.out.println(pluginsCheck.size());
+		
 		deleteRegistro(null);
 	}
 

@@ -36,7 +36,7 @@ public class Dominio {
     @Column
     private String      info;
     @Column
-    private String      schema;
+    private String      c_schema;
     @Column
     private String      utc;
     

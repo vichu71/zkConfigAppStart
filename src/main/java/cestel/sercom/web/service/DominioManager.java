@@ -1,6 +1,7 @@
 package cestel.sercom.web.service;
 
 
+import cestel.sercom.web.entity.Dns;
 import cestel.sercom.web.entity.Dominio;
 import cestel.sercom.web.repository.impl.DominioRepositoryImpl;
 
@@ -29,6 +30,22 @@ public class DominioManager {
 	public List<Dominio> getAllDominio() {
 		return  dominioRepository.findAll();
 	}
+	public void delete(Dominio dominio) {
+		dominioRepository.deleteById(dominio.getId());
+		
+	}
+
+	public void saveOrUpdate(Dominio dominio) {
+		dominioRepository.save(dominio);
+		
+	}
+
+	
+	public List<Dominio> getFiltered(String filter) {
+		return dominioRepository.getDominioByName(filter);
+	}
+
+	
     
 
 }

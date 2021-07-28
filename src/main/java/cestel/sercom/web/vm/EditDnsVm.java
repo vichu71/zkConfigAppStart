@@ -16,6 +16,7 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Execution;
 import org.zkoss.zk.ui.Executions;
@@ -148,7 +149,7 @@ public class EditDnsVm {
 		dns.setDntypecode(dnsBean.getTypeComboSelecionado().getValue());
 		dns.setRemotepeer(dnsBean.getPeer());
 		dns.setAddinsDev(addinsDevMag.getAddinsDevbyId(Long.valueOf(dnsBean.getDeviceComboSelecionado().getValue())));
-		dns.setNodeid("");
+		dns.setNodeid(Labels.getLabel("CfgApp.node"));
 
 //		if (!"-none-".equals(dnsVmBean.getTeam()))
 //			user.setResource(resource.stream().filter(resource -> resource.getName().equals(dnsVmBean.getTeam()))
@@ -196,17 +197,17 @@ public class EditDnsVm {
 		}
 	}
 
-	private void cargaCombos() {
+//	private void cargaCombos() {
 
-		devicesList = addinsDevMag.getAll();
+//		devicesList = addinsDevMag.getAll();
 //		this.devicesName = devicesList.stream().map(AddinsDev::getName)
 //				.collect(Collectors.toList());
 //
 //		devicesName.add(0, "-none-");
-		valueLabelmap = new HashMap<>();
+//		valueLabelmap = new HashMap<>();
 //		valueLabelmap = devicesList.stream().collect(Collectors.toMap(AddinsDev::getId, AddinsDev::getName));
 
-	}
+//	}
 
 	@Command
 	@NotifyChange("*")

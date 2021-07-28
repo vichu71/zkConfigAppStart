@@ -1,0 +1,81 @@
+<?page id="about" title="Acerca de Atlas" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:h="native">
+	<window id="wEditDominio"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.EditDominioVm')"
+		
+		onClose="@command('onClose', wnd=wEditDominio)" width="850px" border="normal"
+		mode="highlighted" closable="true"
+		action="show: slideDown;hide: slideUp">
+
+
+
+		<caption label="${labels.title.addDominio}" iconSclass="fas fa-movile"
+			if="${empty vm.dominioVmBean.id}" />
+		<caption label="${labels.title.editDominio}"
+			iconSclass="fas fa-mobile" if="${not empty vm.dominioVmBean.id}" />
+
+	
+		<div>
+			<grid >
+				<auxhead>
+					<auxheader colspan="4"
+						label="Directory->Domains->New Domains"
+						style="font-size:16px" />
+				</auxhead>
+				<columns visible="false">
+					
+					<column width="120px" />
+					<column width="220px" />
+					
+
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.column.name}"
+							sclass="label-required" />
+						<textbox value="@bind(vm.dominioVmBean.name)"
+							multiline="false" />
+					</row>
+					
+					<row>
+						<label value="${labels.column.desc}"/>
+						<textbox value="@bind(vm.dominioVmBean.info)"
+							multiline="false" />
+					</row>
+					<row>
+						<label value="${labels.column.schema}"/>
+						<textbox value="@bind(vm.dominioVmBean.schema)"
+							multiline="false" />
+					</row>
+					<row>
+						<label value="${labels.column.utc}"/>
+						<textbox value="@bind(vm.dominioVmBean.utc)"
+							multiline="false" />
+					</row>
+					
+				</rows>
+			
+			</grid>
+			
+		</div>
+
+	
+		<div sclass="row">
+			<div sclass="col">
+				<button sclass="btn-success"
+					label="${labels.action.save}"
+					onClick="@command('saveOrUpdateDominio',dominioBean=vm.dominioVmBean, wnd=wEditDominio)"
+					visible="@load(empty vm.dominioVmBean.id)" />
+				<button sclass="btn-success"
+					label="${labels.action.modify}"
+					onClick="@command('saveOrUpdateDominio',dominioBean=vm.dominioVmBean, wnd=wEditDominio)"
+					visible="@load(not empty vm.dominioVmBean.id)" />
+				<button label="${labels.action.cancel}"
+					onClick="@command('onClose', wnd=wEditDominio)" />
+
+			</div>
+		</div>
+		
+	</window>
+</zk>

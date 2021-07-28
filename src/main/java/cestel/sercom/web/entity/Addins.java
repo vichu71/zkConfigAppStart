@@ -63,6 +63,13 @@ public class Addins {
 	
     private List<AddinsProp> addinsPropList;
     
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinTable(name="dn_device",
+    joinColumns=@JoinColumn(name="devid"),
+    inverseJoinColumns=@JoinColumn(name="dnid")
+    )
+    private List<Dns> dnsList;
+    
    
  
 

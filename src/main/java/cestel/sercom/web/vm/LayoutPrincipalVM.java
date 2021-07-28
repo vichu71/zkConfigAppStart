@@ -85,17 +85,17 @@ public class LayoutPrincipalVM extends Window {
 		addPage("Usuarios", "Associations", "asociacionusuarios.zul");
 
 		addPage("Directory", "List", "listadodns2.zul");
-		addPage("Directory", "Dial rules", "listadoDalRules.zul");
-		addPage("Directory", "Subdomains", "listadoSubDomains.zul");
-		addPage("Directory", "Domains", "listadoDomains.zul");
-		addPage("Directory", "Sites", "listadoSites.zul");
+		addPage("Directory", "Dial rules", "listadodilarules.zul");
+		addPage("Directory", "Subdomains", "listadosubdomains.zul");
+		addPage("Directory", "Domains", "listadodominio.zul");
+		addPage("Directory", "Sites", "listadosites.zul");
 
 		devicesMenu.stream().forEach(dev -> {
 			addPage("Devices", dev, "listadodevice.zul", dev);
 
 		});
-		addPage("Plugins", "TechPlugins", "listadoTechPlugins.zul");
-		addPage("Plugins", "ClientPlugins", "listadoClientPlugins.zul");
+		addPage("Plugins", "TechPlugins", "listadoplugins.zul","T");
+		addPage("Plugins", "ClientPlugins", "listadoplugins.zul","C");
 
 		addPage("Tools", "Inbound wizard", "listadoInboundWizard.zul");
 		addPage("Tools", "Events logs", "listadoEventsLogs.zul");

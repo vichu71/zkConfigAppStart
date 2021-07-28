@@ -1,0 +1,97 @@
+<?page title="new page title" contentType="text/html;charset=UTF-8"?>
+<zk>
+
+	<div viewModel="@id('dominioVm') @init('cestel.sercom.web.vm.DominioVm')">
+		<div>
+			<groupbox closable="false">
+				<caption>
+					<label value="${labels.title.dominio}" />
+				</caption>
+				<div>
+					<div>
+						<hlayout>
+							<textbox value="@bind(dominioVm.filter)"
+								onOK="@global-command('loadDominio')"
+								placeholder="${labels.ph.searchDominio}" hflex="3" />
+							<button iconSclass="z-icon-search"
+								onClick="@global-command('loadDominio')" hflex="0.5" />
+							<label value="" hflex="10" />
+							<label value="Domain:" hflex="0.5" />
+							<label
+								value="${sessionScope.connectedUser.domid.name}" hflex="1"
+								style="color:blue" />
+						</hlayout>
+
+					</div>
+				</div>
+				<div sclass="mt-3">
+					<div>
+						<listbox model="@load(dominioVm.dominio)"
+							checkmark="true" mold="paging" pageSize="10" multiple="true" onCheckSelectAll="@command('onSelectAll')">
+							<listhead>
+								<listheader width="50px" />
+								<listheader
+									label="${labels.column.name}" align="left" sort="auto(name)" />
+								<listheader
+									label="${labels.column.id}" align="left"
+									sort="auto(id)" />
+								<listheader
+									label="${labels.column.schema}" align="left"
+									sort="auto(c_schema)" />
+								<listheader
+									label="${labels.column.utc}" align="left"
+									sort="auto(utc)" />
+								<listheader
+									label="${labels.column.desc}" align="left"
+									sort="auto(info)" />
+								<listheader align="right" />
+
+
+							</listhead>
+							<template name="model">
+								<listitem context="editPopupDominio"
+									onClick="@command('addCheckMulti', dominio=each)">
+									<listcell height="30px" />
+									<listcell label="@load(each.name)" />
+									<listcell
+										label="@load(each.id)" />
+									<listcell
+										label="@load(each.c_schema)" />
+									<listcell
+										label="@load(each.utc)" />
+									<listcell
+										label="@load(each.info)" />
+									<listcell height="30px">
+										<div height="30px">
+											<button sclass="btn-success"
+												iconSclass="z-icon-pencil"
+												onClick="@command('showEdit', dominio=each)" />
+											<button sclass="btn-danger"
+												iconSclass="z-icon-trash"
+												onClick="@command('removeDominio', dominio=each)" />
+										</div>
+									</listcell>
+								</listitem>
+							</template>
+						</listbox>
+					</div>
+				</div>
+				<div sclass="row mt-3">
+					<div>
+						<button label="${labels.action.add}"
+							onClick="@command('showEdit')" />
+					</div>
+				</div>
+			</groupbox>
+		</div>
+		<menupopup id="editPopupDominio">
+			<menuitem iconSclass="z-icon-pencil" label="Modificar"
+				onClick="@command('showEditMulti')" />
+			<menuitem iconSclass="z-icon-trash-o" label="Eliminar"
+				onClick="@command('removeMulti')" />
+		</menupopup>
+	</div>
+
+
+
+</zk>

@@ -1,8 +1,11 @@
 package cestel.sercom.web.vm;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import org.xml.sax.SAXException;
 import org.zkoss.bind.BindUtils;
 import org.zkoss.bind.annotation.BindingParam;
@@ -18,13 +21,16 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Window;
 
 import cestel.sercom.web.descriptor.bean.DeviceDescriptorBean;
+import cestel.sercom.web.descriptor.bean.PluginsDescriptorBean;
 import cestel.sercom.web.entity.Addins;
 import cestel.sercom.web.entity.AddinsDev;
+import cestel.sercom.web.entity.AddinsPlg;
 import cestel.sercom.web.entity.AddinsProp;
 import cestel.sercom.web.entity.Dns;
 import cestel.sercom.web.entity.User;
 import cestel.sercom.web.service.AddinsDevManager;
 import cestel.sercom.web.service.AddinsManager;
+import cestel.sercom.web.service.AddinsPlgManager;
 import cestel.sercom.web.service.DescriptorManager;
 import cestel.sercom.web.service.DnsManager;
 import cestel.sercom.web.service.PropAddinsManager;
@@ -37,7 +43,7 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class CreateDeviceVm {
+public class CreatePluginVm {
 
 	@WireVariable
 	private DescriptorManager decriptorMag;
@@ -48,20 +54,28 @@ public class CreateDeviceVm {
 	@WireVariable
 	private PropAddinsManager propaddinsMag;
 
+//	@WireVariable
+//	private AddinsDevManager addinsDevMag;
+	
 	@WireVariable
-	private AddinsDevManager addinsDevMag;
+	private AddinsPlgManager addinsPlgMag;
 
 	@WireVariable
 	private DnsManager dnsMag;
 
-	DeviceDescriptorBean deviceDescriptorBean;
-	private List<DeviceDescriptorBean> deviceDescriptorBeanList = new ArrayList<DeviceDescriptorBean>();
+//	private DeviceDescriptorBean deviceDescriptorBean;
+//	private List<DeviceDescriptorBean> deviceDescriptorBeanList = new ArrayList<DeviceDescriptorBean>();
+//	
+	private Set<PluginsDescriptorBean> pluginsDescriptorBeanList = new HashSet<PluginsDescriptorBean>();
+	PluginsDescriptorBean pluginsDescriptorBean;
 
 	private String source;
 
 	Addins addins;
 
 	AddinsDev addinsDev;
+	
+	AddinsPlg addinsPlg;
 
 	AddinsProp addinsProp;
 	User userLoginSession = null;
@@ -83,7 +97,8 @@ public class CreateDeviceVm {
 		// deviceVmBean = new DeviceVmBean();
 
 		if (addins == null)
-			deviceDescriptorBeanList = decriptorMag.cargaDescriptorDeviceType(source);
+			pluginsDescriptorBeanList = decriptorMag.cargaDescriptorPluginsType(source);
+		
 
 	}
 
@@ -95,26 +110,21 @@ public class CreateDeviceVm {
 	@Command
 	public void onSave(@BindingParam("wnd") Window win) throws SAXException {
 
-		if (createDNCheck)
-			System.out.println("true");
-		else
-			System.out.println("false");
-
+		
 		addins = new Addins();
 
-		addins.setFamily(deviceDescriptorBean.getFamily());
-		addins.setType(deviceDescriptorBean.getType());
-		addins.setVersion(deviceDescriptorBean.getVersion());
-		addins.setAclass("D");
+		addins.setFamily(pluginsDescriptorBean.getFamily());
+		addins.setType(pluginsDescriptorBean.getType());
+		addins.setVersion(pluginsDescriptorBean.getVersion());
+		addins.setAclass("P");
 		addins.setNodeid(Labels.getLabel("CfgApp.node"));
 		addins = addinsMag.saveOrUpdate(addins);
 
-		addinsDev = new AddinsDev();
-		addinsDev.setId(addins.getId());
-		addinsDev.setName(name);
-		addinsDev.setDevgroup(source);
-		addinsDev.setMedia(deviceDescriptorBean.getMedia().substring(0, 1));
-		addinsDev = addinsDevMag.saveOrUpdate(addinsDev);
+		addinsPlg = new AddinsPlg();
+		addinsPlg.setId(addins.getId());
+		addinsPlg.setPclass(source);
+		
+		addinsPlg = addinsPlgMag.saveOrUpdate(addinsPlg);
 
 		propaddinsMag.deleteByAddins(addins);
 
@@ -134,31 +144,15 @@ public class CreateDeviceVm {
 				}
 			addinsProp = propaddinsMag.saveOrUpdate(addinsProp);
 		}
-		BindUtils.postGlobalCommand(null, null, "loadDevices", null);
-		if (createDNCheck) {
-			Dns dns = new Dns();
-			dns.setName(name);
-			dns.setDomid(userLoginSession.getDomid());
-			dns.setMediacode(deviceDescriptorBean.getMedia().substring(0, 1));
-			 if (!"CmpSelectorDefault".equals(deviceDescriptorBean.getType())){
-				
-				 dns.setDntypecode(DNTypes.LOCAL.toString().substring(0, 1));
-			 }else {
-				 dns.setDntypecode(DNTypes.SERVICE.toString().substring(0, 1));
-			 }
-			dns.setRemotepeer("");
-			dns.setAddinsDev(addinsDev);
-			dns.setNodeid(Labels.getLabel("CfgApp.node"));
-					
-			dnsMag.saveOrUpdate(dns);
-		}
+		BindUtils.postGlobalCommand(null, null, "loadPlugin", null);
+		
 		win.detach();
 	}
 
 	@Command
-	public void deviceSelect(@BindingParam("device") DeviceDescriptorBean device) throws SAXException {
+	public void pluginSelect(@BindingParam("plugin") PluginsDescriptorBean plugin) throws SAXException {
 		// System.out.println(device.getType());
-		this.deviceDescriptorBean = device;
+		this.pluginsDescriptorBean = plugin;
 	}
 
 	@Command
