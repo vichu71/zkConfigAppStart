@@ -3,11 +3,12 @@ package cestel.sercom.web.vm.bean;
 import java.util.ArrayList;
 import java.util.List;
 
+import cestel.sercom.web.entity.Dominio;
 import cestel.sercom.web.util.ComboDto;
 import lombok.Data;
 
 @Data
-public class DominioVmBean {
+public class SubDominioVmBean {
 	
 	private Long id;
 	
@@ -15,11 +16,8 @@ public class DominioVmBean {
 
 	private String info;
 	
-	private String schema;
+	private Dominio dominio;
 	
 	private String utc;
-	
-	private List<ComboDto> listDominios = new ArrayList<ComboDto>();
-	private ComboDto dominioComboSelecionado;
 	
 }

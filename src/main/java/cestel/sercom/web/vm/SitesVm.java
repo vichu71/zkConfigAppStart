@@ -21,8 +21,8 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
-import cestel.sercom.web.entity.Dominio;
-import cestel.sercom.web.service.DominioManager;
+import cestel.sercom.web.entity.Sites;
+import cestel.sercom.web.service.SitesManager;
 import cestel.sercom.web.util.ApplicationUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,11 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class DominioVm {
+public class SitesVm {
 
-	private List<Dominio> dominio = new ArrayList<Dominio>();
+	private List<Sites> sites = new ArrayList<Sites>();
 
-	private List<Dominio> dominioCheck;
+	private List<Sites> sitesCheck;
 
 	// initialize filter to null (no value)
 	private String filter;
@@ -44,15 +44,15 @@ public class DominioVm {
 
 	
 	@WireVariable
-	private DominioManager domMag;
+	private SitesManager siteMag;
 
 	@Init
 	public void init() {
 
-		log.info("Init DominioVM");
+		log.info("Init SitesVM");
 
-		dominioCheck = new ArrayList<Dominio>();
-		loadDominio();
+		sitesCheck = new ArrayList<Sites>();
+		loadSites();
 
 		// initialize filter to null (no value)
 		setFilter(null);
@@ -64,8 +64,8 @@ public class DominioVm {
 	 * @return A list of Instructor elements representing the instructors
 	 * @see Instructor
 	 */
-	public List<Dominio> getDominioListFromDatabase() {
-		return getFilter() != null ? domMag.getFiltered(getFilter()) : domMag.getAllDominio();
+	public List<Sites> getSitesListFromDatabase() {
+		return getFilter() != null ? siteMag.getFiltered(getFilter()) : siteMag.getAllSites();
 	}
 
 	/**
@@ -74,25 +74,25 @@ public class DominioVm {
 	 * @see Instructor
 	 */
 	@GlobalCommand
-	@NotifyChange("dominio")
-	public void loadDominio() {
-		this.dominio = getDominioListFromDatabase();
+	@NotifyChange("sites")
+	public void loadSites() {
+		this.sites = getSitesListFromDatabase();
 	}
 
 	@GlobalCommand
-	@NotifyChange("dominioCheck")
-	public void loadDominioCheck() {
-		dominioCheck.clear();
+	@NotifyChange("sitesCheck")
+	public void loadSitesCheck() {
+		sitesCheck.clear();
 	}
 
 	@Command
-	@NotifyChange("dominio")
-	public void removeDominio(@BindingParam("dominio") Dominio dominio) {
+	@NotifyChange("sites")
+	public void removeSites(@BindingParam("sites") Sites sites) {
 
-		deleteRegistro(dominio);
+		deleteRegistro(sites);
 
 	}
-	private void deleteRegistro(Dominio dominio) {
+	private void deleteRegistro(Sites sites) {
 		try {
 			// confirmation dialog
 		
@@ -101,23 +101,23 @@ public class DominioVm {
 					if (Messagebox.Button.YES.equals(event.getButton())) {
 
 						// store ids of the new edited list
-						if(dominio!=null) {
+						if(sites!=null) {
 							
-							domMag.delete(dominio);
+							siteMag.delete(sites);
 
 						// el envio del xml pa luego
 						// resourceXml.deleteMsg(addins);
-						BindUtils.postGlobalCommand(null, null, "loadDominio", null);
+						BindUtils.postGlobalCommand(null, null, "loadSites", null);
 
 						// show notification
 						ApplicationUtils.showInfo("message.registroEliminado");
 						}else {
 							
-							for(Dominio dominio:dominioCheck) {
-								domMag.delete(dominio);
+							for(Sites sites:sitesCheck) {
+								siteMag.delete(sites);
 								
 							}
-							BindUtils.postGlobalCommand(null, null, "loadDominio", null);
+							BindUtils.postGlobalCommand(null, null, "loadSites", null);
 							
 						}
 					}
@@ -135,29 +135,29 @@ public class DominioVm {
 	}
 
 	@Command
-	@NotifyChange("dominio")
-	public void showEdit(@BindingParam("dominio") Dominio dominio) {
+	@NotifyChange("sites")
+	public void showEdit(@BindingParam("sites") Sites sites) {
 		Window window;
 		
 		final HashMap<String, Object> map = new HashMap<String, Object>();
-		if (dominio != null) {
+		if (sites != null) {
 
-			map.put("dominio", dominio);
+			map.put("sites", sites);
 			// si va con el dns es mara modificar (con el map)
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, map);
-		} else if (dominioCheck != null && dominioCheck.size() > 0) {
-			map.put("dominioCheck", dominioCheck);
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, map);
+			window = (Window) Executions.createComponents("~./zul/editarsites.zul", null, map);
+		} else if (sitesCheck != null && sitesCheck.size() > 0) {
+			map.put("sitesCheck", sitesCheck);
+			window = (Window) Executions.createComponents("~./zul/editarsites.zul", null, map);
 
 		} else {
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, null);
+			window = (Window) Executions.createComponents("~./zul/editarsites.zul", null, null);
 		}
 		window.doModal();
 
 	}
 
 	@Command
-	@NotifyChange("dominio")
+	@NotifyChange("sites")
 	public void showEditMulti() {
 
 		showEdit(null);
@@ -165,19 +165,19 @@ public class DominioVm {
 	}
 
 	@Command
-	public void addCheckMulti(@BindingParam("dominio") Dominio dominio) {
+	public void addCheckMulti(@BindingParam("sites") Sites sites) {
 
-		if (dominioCheck.contains(dominio))
-			dominioCheck.remove(dominio);
+		if (sitesCheck.contains(sites))
+			sitesCheck.remove(sites);
 		else
-			dominioCheck.add(dominio);
+			sitesCheck.add(sites);
 	}
 
 	@Command
 	public void onSelectAll(@ContextParam(ContextType.TRIGGER_EVENT) CheckEvent e) {
 
 		if (e.isChecked())
-			dominioCheck.addAll(dominio);
+			sitesCheck.addAll(sites);
 
 	}
 	@Command

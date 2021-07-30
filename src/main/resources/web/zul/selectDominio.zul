@@ -1,0 +1,19 @@
+<div
+	viewModel="@id('vmSelectDominio') @init('cestel.sercom.web.vm.SelectDominioVm')">
+	<label value="${labels.column.domain}" sclass="label-required" />
+
+
+	<combobox id="cmbDominio" width="187px"
+		model="@load(vmSelectDominio.dominioVmBean.listDominios)"
+		selectedItem="@bind(vmSelectDominio.dominioVmBean.dominioComboSelecionado)">
+		<template name="model" var="p">
+			<comboitem value="@load(p.value)" label="@load(p.label)" />
+		</template>
+
+	</combobox>
+
+
+
+
+</div>
+

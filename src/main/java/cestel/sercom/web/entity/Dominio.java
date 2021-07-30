@@ -45,6 +45,15 @@ public class Dominio {
     @Fetch(value = FetchMode.SUBSELECT)
 	private List<SubDominio> subdominios;
 
-  
+    @Transient
+	private String IdString;
+    
+    public String getIdString() {
+		return Long.toString(id);
+	}
+
+	public void setIdString(String idString) {
+		IdString = idString;
+	}
 
 }

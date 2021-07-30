@@ -1,0 +1,77 @@
+<?page id="about" title="Acerca de Atlas" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:h="native">
+	<window id="wEditSubDominio"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.EditSubDominioVm')"
+		
+		onClose="@command('onClose', wnd=wEditSubDominio)" width="850px" border="normal"
+		mode="highlighted" closable="true"
+		action="show: slideDown;hide: slideUp">
+
+
+
+		<caption label="${labels.title.addSubDominio}" iconSclass="fas fa-movile"
+			if="${empty vm.subDominioVmBean.id}" />
+		<caption label="${labels.title.editSubDominio}"
+			iconSclass="fas fa-mobile" if="${not empty vm.subDominioVmBean.id}" />
+
+	
+		<div>
+			<grid >
+				<auxhead>
+					<auxheader 
+						label="Directory->SubDomains->New SubDomains"
+						style="font-size:16px" />
+				</auxhead>
+				<columns visible="false">
+					
+					<column width="120px" />
+					<column width="220px" />
+					
+
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.column.name}"
+							sclass="label-required" />
+						<textbox value="@bind(vm.subDominioVmBean.name)"
+							multiline="false" />
+					</row>
+					
+					<row>
+						<label value="${labels.column.desc}"/>
+						<textbox value="@bind(vm.subDominioVmBean.info)"
+							multiline="false" />
+					</row>
+					
+					<row>
+						<label value="${labels.column.utc}"/>
+						<textbox value="@bind(vm.subDominioVmBean.utc)"
+							multiline="false" />
+					</row>
+					
+				</rows>
+			
+			</grid>
+			
+		</div>
+
+	
+		<div sclass="row">
+			<div sclass="col">
+				<button sclass="btn-success"
+					label="${labels.action.save}"
+					onClick="@command('saveOrUpdateSubDominio',subDominioBean=vm.subDominioVmBean, wnd=wEditSubDominio)"
+					visible="@load(empty vm.subDominioVmBean.id)" />
+				<button sclass="btn-success"
+					label="${labels.action.modify}"
+					onClick="@command('saveOrUpdateSubDominio',subDominioBean=vm.subDominioVmBean, wnd=wEditSubDominio)"
+					visible="@load(not empty vm.subDominioVmBean.id)" />
+				<button label="${labels.action.cancel}"
+					onClick="@command('onClose', wnd=wEditSubDominio)" />
+
+			</div>
+		</div>
+		
+	</window>
+</zk>

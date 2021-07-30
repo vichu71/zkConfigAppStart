@@ -25,6 +25,6 @@ public interface DominioRepositoryImpl<T>{
 
 	Dominio save(Dominio dominio);
 
-	List<Dominio> getDominioByName(String name);
+	List<Dominio> getDominioByName(String filter);
 
 }

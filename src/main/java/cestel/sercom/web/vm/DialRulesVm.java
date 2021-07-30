@@ -21,8 +21,8 @@ import org.zkoss.zk.ui.select.annotation.WireVariable;
 import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Window;
 
-import cestel.sercom.web.entity.Dominio;
-import cestel.sercom.web.service.DominioManager;
+import cestel.sercom.web.entity.DialRules;
+import cestel.sercom.web.service.DialRulesManager;
 import cestel.sercom.web.util.ApplicationUtils;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,11 +32,11 @@ import lombok.extern.slf4j.Slf4j;
 @Setter
 @Slf4j
 @VariableResolver(org.zkoss.zkplus.spring.DelegatingVariableResolver.class)
-public class DominioVm {
+public class DialRulesVm {
 
-	private List<Dominio> dominio = new ArrayList<Dominio>();
+	private List<DialRules> dialRules = new ArrayList<DialRules>();
 
-	private List<Dominio> dominioCheck;
+	private List<DialRules> dialRulesCheck;
 
 	// initialize filter to null (no value)
 	private String filter;
@@ -44,15 +44,15 @@ public class DominioVm {
 
 	
 	@WireVariable
-	private DominioManager domMag;
+	private DialRulesManager dialRuleMag;
 
 	@Init
 	public void init() {
 
-		log.info("Init DominioVM");
+		log.info("Init DialRulesVM");
 
-		dominioCheck = new ArrayList<Dominio>();
-		loadDominio();
+		dialRulesCheck = new ArrayList<DialRules>();
+		loadDialRules();
 
 		// initialize filter to null (no value)
 		setFilter(null);
@@ -64,8 +64,8 @@ public class DominioVm {
 	 * @return A list of Instructor elements representing the instructors
 	 * @see Instructor
 	 */
-	public List<Dominio> getDominioListFromDatabase() {
-		return getFilter() != null ? domMag.getFiltered(getFilter()) : domMag.getAllDominio();
+	public List<DialRules> getDialRulesListFromDatabase() {
+		return getFilter() != null ? dialRuleMag.getFiltered(getFilter()) : dialRuleMag.getAllDialRules();
 	}
 
 	/**
@@ -74,25 +74,25 @@ public class DominioVm {
 	 * @see Instructor
 	 */
 	@GlobalCommand
-	@NotifyChange("dominio")
-	public void loadDominio() {
-		this.dominio = getDominioListFromDatabase();
+	@NotifyChange("dialRules")
+	public void loadDialRules() {
+		this.dialRules = getDialRulesListFromDatabase();
 	}
 
 	@GlobalCommand
-	@NotifyChange("dominioCheck")
-	public void loadDominioCheck() {
-		dominioCheck.clear();
+	@NotifyChange("dialRulesCheck")
+	public void loadDialRulesCheck() {
+		dialRulesCheck.clear();
 	}
 
 	@Command
-	@NotifyChange("dominio")
-	public void removeDominio(@BindingParam("dominio") Dominio dominio) {
+	@NotifyChange("dialRules")
+	public void removeDialRules(@BindingParam("dialRules") DialRules dialRules) {
 
-		deleteRegistro(dominio);
+		deleteRegistro(dialRules);
 
 	}
-	private void deleteRegistro(Dominio dominio) {
+	private void deleteRegistro(DialRules dialRules) {
 		try {
 			// confirmation dialog
 		
@@ -101,23 +101,23 @@ public class DominioVm {
 					if (Messagebox.Button.YES.equals(event.getButton())) {
 
 						// store ids of the new edited list
-						if(dominio!=null) {
+						if(dialRules!=null) {
 							
-							domMag.delete(dominio);
+							dialRuleMag.delete(dialRules);
 
 						// el envio del xml pa luego
 						// resourceXml.deleteMsg(addins);
-						BindUtils.postGlobalCommand(null, null, "loadDominio", null);
+						BindUtils.postGlobalCommand(null, null, "loadDialRules", null);
 
 						// show notification
 						ApplicationUtils.showInfo("message.registroEliminado");
 						}else {
 							
-							for(Dominio dominio:dominioCheck) {
-								domMag.delete(dominio);
+							for(DialRules dialRules:dialRulesCheck) {
+								dialRuleMag.delete(dialRules);
 								
 							}
-							BindUtils.postGlobalCommand(null, null, "loadDominio", null);
+							BindUtils.postGlobalCommand(null, null, "loadDialRules", null);
 							
 						}
 					}
@@ -135,29 +135,29 @@ public class DominioVm {
 	}
 
 	@Command
-	@NotifyChange("dominio")
-	public void showEdit(@BindingParam("dominio") Dominio dominio) {
+	@NotifyChange("dialRules")
+	public void showEdit(@BindingParam("dialRules") DialRules dialRules) {
 		Window window;
 		
 		final HashMap<String, Object> map = new HashMap<String, Object>();
-		if (dominio != null) {
+		if (dialRules != null) {
 
-			map.put("dominio", dominio);
+			map.put("dialRules", dialRules);
 			// si va con el dns es mara modificar (con el map)
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, map);
-		} else if (dominioCheck != null && dominioCheck.size() > 0) {
-			map.put("dominioCheck", dominioCheck);
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, map);
+			window = (Window) Executions.createComponents("~./zul/editardialRules.zul", null, map);
+		} else if (dialRulesCheck != null && dialRulesCheck.size() > 0) {
+			map.put("dialRulesCheck", dialRulesCheck);
+			window = (Window) Executions.createComponents("~./zul/editardialRules.zul", null, map);
 
 		} else {
-			window = (Window) Executions.createComponents("~./zul/editardominio.zul", null, null);
+			window = (Window) Executions.createComponents("~./zul/editardialRules.zul", null, null);
 		}
 		window.doModal();
 
 	}
 
 	@Command
-	@NotifyChange("dominio")
+	@NotifyChange("dialRules")
 	public void showEditMulti() {
 
 		showEdit(null);
@@ -165,19 +165,19 @@ public class DominioVm {
 	}
 
 	@Command
-	public void addCheckMulti(@BindingParam("dominio") Dominio dominio) {
+	public void addCheckMulti(@BindingParam("dialRules") DialRules dialRules) {
 
-		if (dominioCheck.contains(dominio))
-			dominioCheck.remove(dominio);
+		if (dialRulesCheck.contains(dialRules))
+			dialRulesCheck.remove(dialRules);
 		else
-			dominioCheck.add(dominio);
+			dialRulesCheck.add(dialRules);
 	}
 
 	@Command
 	public void onSelectAll(@ContextParam(ContextType.TRIGGER_EVENT) CheckEvent e) {
 
 		if (e.isChecked())
-			dominioCheck.addAll(dominio);
+			dialRulesCheck.addAll(dialRules);
 
 	}
 	@Command

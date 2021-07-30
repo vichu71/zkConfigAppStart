@@ -3,6 +3,7 @@ package cestel.sercom.web.service;
 
 import cestel.sercom.web.entity.Dns;
 import cestel.sercom.web.entity.Dominio;
+import cestel.sercom.web.entity.SubDominio;
 import cestel.sercom.web.repository.impl.DominioRepositoryImpl;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ public class DominioManager {
 	public List<Dominio> getFiltered(String filter) {
 		return dominioRepository.getDominioByName(filter);
 	}
+
+
 
 	
     

@@ -69,8 +69,7 @@
 		</west>
 
 		<center vflex="true">
-			<div id="container"
-				>
+			<div id="container">
 				<apply id="contentInclude" mode="instant"
 					sclass="content" currentPage="@ref(vm.currentPage)"
 					templateURI="@load(currentPage.includeUri)" />

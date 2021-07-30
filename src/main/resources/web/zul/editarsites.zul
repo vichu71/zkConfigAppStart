@@ -1,0 +1,71 @@
+<?page id="about" title="Acerca de Atlas" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns:h="native">
+	<window id="wEditSites"
+		viewModel="@id('vm') @init('cestel.sercom.web.vm.EditSitesVm')"
+		
+		onClose="@command('onClose', wnd=wEditSites)" width="850px" border="normal"
+		mode="highlighted" closable="true"
+		action="show: slideDown;hide: slideUp">
+
+
+
+		<caption label="${labels.title.addSites}" iconSclass="fas fa-movile"
+			if="${empty vm.sitesVmBean.id}" />
+		<caption label="${labels.title.editSites}"
+			iconSclass="fas fa-mobile" if="${not empty vm.sitesVmBean.id}" />
+
+	
+		<div>
+			<grid >
+				<auxhead>
+					<auxheader colspan="4"
+						label="Directory->Site->New Sites"
+						style="font-size:16px" />
+				</auxhead>
+				<columns visible="false">
+					
+					<column width="120px" />
+					<column width="220px" />
+					
+
+				</columns>
+				<rows>
+					<row>
+						<label value="${labels.column.name}"
+							sclass="label-required" />
+						<textbox value="@bind(vm.sitesVmBean.name)"
+							multiline="false" />
+					</row>
+					
+					<row>
+						<label value="${labels.column.desc}"/>
+						<textbox value="@bind(vm.sitesVmBean.info)"
+							multiline="false" />
+					</row>
+										
+				</rows>
+			
+			</grid>
+			
+		</div>
+
+	
+		<div sclass="row">
+			<div sclass="col">
+				<button sclass="btn-success"
+					label="${labels.action.save}"
+					onClick="@command('saveOrUpdateSites',sitesBean=vm.sitesVmBean, wnd=wEditSites)"
+					visible="@load(empty vm.sitesVmBean.id)" />
+				<button sclass="btn-success"
+					label="${labels.action.modify}"
+					onClick="@command('saveOrUpdateSites',sitesBean=vm.sitesVmBean, wnd=wEditSites)"
+					visible="@load(not empty vm.sitesVmBean.id)" />
+				<button label="${labels.action.cancel}"
+					onClick="@command('onClose', wnd=wEditSites)" />
+
+			</div>
+		</div>
+		
+	</window>
+</zk>

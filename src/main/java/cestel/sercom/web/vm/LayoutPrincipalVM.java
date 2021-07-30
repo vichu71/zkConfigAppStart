@@ -85,8 +85,8 @@ public class LayoutPrincipalVM extends Window {
 		addPage("Usuarios", "Associations", "asociacionusuarios.zul");
 
 		addPage("Directory", "List", "listadodns2.zul");
-		addPage("Directory", "Dial rules", "listadodilarules.zul");
-		addPage("Directory", "Subdomains", "listadosubdomains.zul");
+		addPage("Directory", "Dial rules", "listadodialrules.zul");
+		addPage("Directory", "Subdomains", "listadosubdominio.zul");
 		addPage("Directory", "Domains", "listadodominio.zul");
 		addPage("Directory", "Sites", "listadosites.zul");
 
